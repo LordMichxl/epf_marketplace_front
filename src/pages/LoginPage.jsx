@@ -42,9 +42,11 @@ export default function LoginPage() {
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
+            <div className="flex items-center justify-between">
             <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">
               Email
             </label>
+            </div>
             <div className="mt-2">
               <input
                 id="email"

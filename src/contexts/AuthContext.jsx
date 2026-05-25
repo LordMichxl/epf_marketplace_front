@@ -29,7 +29,7 @@ export function AuthProvider({ children }) {
     const data = await authService.register(formData)
     localStorage.setItem('token', data.token)
     setUser(data.user)
-    toast.success(`Bienvenue, ${data.user.name} !`)
+    toast.success(data.message)
     if (data.user.role === 'seller') navigate('/seller/dashboard')
     else navigate('/')
   }
@@ -39,7 +39,7 @@ export function AuthProvider({ children }) {
     const data = await authService.login(formData)
     localStorage.setItem('token', data.token)
     setUser(data.user)
-    toast.success(`Content de te revoir, ${data.user.name} !`)
+    toast.success(data.message)
 
     if (data.user.role === 'admin')  navigate('/admin')
     else if (data.user.role === 'seller') navigate('/seller/dashboard')
@@ -47,20 +47,27 @@ export function AuthProvider({ children }) {
   }
 
   // --- Déconnexion ---
-  const logout =  () => {
-    authService.logout()  
+  const logout = async () => {
+    try {
+      await authService.logout()
+    } catch (err) {
+      console.error('Erreur lors de la déconnexion', err)
+    }
     localStorage.removeItem('token')
     setUser(null)
-    toast('À bientôt !')
+    toast.success('Déconnexion réussie.')
     navigate('/login')
   }
 
   // --- Mise à jour du profil ---
-  const updateUser = (newData) => {
-    setUser(prev => ({ ...prev, ...newData }))
+  const updateProfile = async (formData) => {
+    const data = await authService.updateProfile(formData)
+    setUser(data.user)
+    toast.success(data.message)
+    return data
   }
 
-  const value = { user, loading, register, login, logout, updateUser }
+  const value = { user, loading, register, login, logout, updateProfile }
 
   return (
     <AuthContext.Provider value={value}>

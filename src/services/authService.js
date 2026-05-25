@@ -8,7 +8,7 @@ const authService = {
 
   login: async (data) => {
     const res = await api.post('/auth/login', data)
-    return res.data // { token, user }
+    return res.data // { token, user, message }
   },
 
   logout: async () => {
@@ -17,11 +17,13 @@ const authService = {
 
   me: async () => {
     const res = await api.get('/auth/me')
-    return res.data
+    return res.data.user // Retourner directement l'objet user
   },
 
-  updateProfile: async (data) => {
-    const res = await api.put('/auth/profile', data)
+  updateProfile: async (formData) => {
+    const res = await api.put('/auth/profile', formData, {
+        headers:{ 'Content-Type': 'multipart/form-data',}
+    })
     return res.data
   },
 }

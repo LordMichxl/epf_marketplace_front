@@ -1,4 +1,6 @@
 import { useAuth } from '../contexts/AuthContext'
+import toast from 'react-hot-toast'
+import { NavLink } from 'react-router-dom'
 
 export default function HomePage() {
   const { user, logout } = useAuth()
@@ -14,9 +16,12 @@ export default function HomePage() {
               </h1>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
-                Bienvenue, <strong>{user?.name}</strong>
-              </span>
+              <NavLink 
+                to="/profile" 
+                className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+              >
+                Profil
+              </NavLink>
               <button
                 onClick={logout}
                 className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-500 transition-colors"
@@ -33,51 +38,6 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Bienvenue sur EPF Market!
           </h2>
-          <p className="text-gray-600 mb-6">
-            Vous êtes connecté en tant que <strong>{user?.role === 'seller' ? 'Vendeur' : 'Acheteur'}</strong>
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-indigo-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-indigo-900 mb-2">Votre profil</h3>
-              <ul className="text-sm text-gray-700 space-y-2">
-                <li><strong>Email:</strong> {user?.email}</li>
-                <li><strong>Téléphone:</strong> {user?.phone || 'Non renseigné'}</li>
-                <li><strong>Ville:</strong> {user?.city || 'Non renseignée'}</li>
-                {user?.role === 'seller' && (
-                  <li><strong>Rating:</strong> {user?.rating || 0}/5 ({user?.total_reviews || 0} avis)</li>
-                )}
-              </ul>
-            </div>
-
-            <div className="bg-green-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-green-900 mb-2">Actions rapides</h3>
-              <ul className="text-sm text-gray-700 space-y-2">
-                <li>
-                  <a href="#" className="text-indigo-600 hover:text-indigo-500 font-medium">
-                    Voir les produits
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-indigo-600 hover:text-indigo-500 font-medium">
-                    Mon panier
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-indigo-600 hover:text-indigo-500 font-medium">
-                    Mes commandes
-                  </a>
-                </li>
-                {user?.role === 'seller' && (
-                  <li>
-                    <a href="#" className="text-indigo-600 hover:text-indigo-500 font-medium">
-                      Dashboard vendeur
-                    </a>
-                  </li>
-                )}
-              </ul>
-            </div>
-          </div>
         </div>
       </main>
     </div>

@@ -46,9 +46,11 @@ export default function RegisterPage() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
+                <div className="flex items-center justify-between">
               <label htmlFor="name" className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">
                 Name
               </label>
+              </div>
               <div className="mt-2">
                 <input
                   id="name"
@@ -63,9 +65,11 @@ export default function RegisterPage() {
               </div>
             </div>
             <div>
+                <div className="flex items-center justify-between">
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">
                 Email
               </label>
+              </div>
               <div className="mt-2">
                 <input
                   id="email"
@@ -87,9 +91,11 @@ export default function RegisterPage() {
             </div>
 
             <div>
+            <div className="flex items-center justify-between">
               <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">
                 Password
               </label>
+                </div>
               <div className="mt-2">
                 <input
                   id="password"
@@ -112,9 +118,11 @@ export default function RegisterPage() {
             </div>
 
             <div>
+            <div className="flex items-center justify-between">
               <label htmlFor="confirmPassword" className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">
                 Confirmer le mot de passe
               </label>
+                </div>
               <div className="mt-2">
                 <input
                   id="confirmPassword"
@@ -134,9 +142,11 @@ export default function RegisterPage() {
             </div>
 
             <div>
+                <div className="flex items-center justify-between">
               <label htmlFor="role" className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">
                 Rôle
               </label>
+                </div>
               <div className="mt-2">
                 <select
                   id="role"
@@ -151,9 +161,11 @@ export default function RegisterPage() {
             </div>
 
             <div>
+                <div className="flex items-center justify-between">
               <label htmlFor="phone" className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">
                 Téléphone
               </label>
+              </div>
               <div className="mt-2">
                 <input
                   id="phone"
@@ -174,9 +186,11 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="city" className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">
-                Ville
-              </label>
+              <div className="flex items-center justify-between">
+                <label htmlFor="city" className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">
+                  Ville
+                </label>
+              </div>
               <div className="mt-2">
                 <input
                   id="city"
@@ -197,9 +211,11 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="bio" className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">
-                Bio
-              </label>
+              <div className="flex items-center justify-between">
+                <label htmlFor="bio" className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">
+                  Bio
+                </label>
+              </div>
               <div className="mt-2">
                 <textarea
                   id="bio"
