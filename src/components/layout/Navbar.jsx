@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { ShoppingCart, User, LogOut } from "lucide-react";
+import { ShoppingCart, User, LogOut, Search } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -11,14 +11,22 @@ export default function Navbar() {
     navigate("/login");
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const q = e.target.q.value.trim();
+    if (q) navigate(`/search?q=${q}`);
+  };
+
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
 
+        {/* Logo */}
         <Link to="/" className="text-xl font-bold text-indigo-600">
           EPF Market
         </Link>
 
+        {/* Liens du milieu */}
         <div className="hidden md:flex items-center gap-6">
           <Link to="/products" className="text-gray-600 hover:text-indigo-600 transition-colors">
             Produits
@@ -35,6 +43,26 @@ export default function Navbar() {
           )}
         </div>
 
+        {/* Barre de recherche */}
+        <form
+          onSubmit={handleSearch}
+          className="hidden md:flex items-center border border-gray-200 rounded-lg overflow-hidden"
+        >
+          <input
+            name="q"
+            type="text"
+            placeholder="Rechercher..."
+            className="px-3 py-1.5 text-sm outline-none w-48"
+          />
+          <button
+            type="submit"
+            className="px-3 py-1.5 bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+          >
+            <Search size={16} />
+          </button>
+        </form>
+
+        {/* Partie droite */}
         <div className="flex items-center gap-3">
           {user ? (
             <>
@@ -47,7 +75,10 @@ export default function Navbar() {
                 <User size={20} />
                 <span className="hidden md:block text-sm font-medium">{user.name}</span>
               </Link>
-              <button onClick={handleLogout} className="flex items-center gap-1 text-sm text-red-500 hover:text-red-700">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1 text-sm text-red-500 hover:text-red-700"
+              >
                 <LogOut size={18} />
                 <span className="hidden md:block">Déconnexion</span>
               </button>
@@ -57,7 +88,10 @@ export default function Navbar() {
               <Link to="/login" className="text-sm text-gray-600 hover:text-indigo-600">
                 Connexion
               </Link>
-              <Link to="/register" className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+              <Link
+                to="/register"
+                className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+              >
                 S'inscrire
               </Link>
             </>
