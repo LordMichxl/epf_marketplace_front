@@ -1,25 +1,25 @@
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import {Navigate, Outlet} from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
-export default function ProtectedRoute({ children, role }) {
-  const { user, loading } = useAuth();
+export default function ProtectedRoute({ role }) {
 
-  if (loading) return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
-    </div>
-  );
+  const { user, loading } = useAuth()
 
-  if (!user) return <Navigate to="/login" />;
-
-  if (role && user.role !== role) return (
-    <div className="flex items-center justify-center h-screen text-center">
-      <div>
-        <h1 className="text-6xl font-bold text-red-500">403</h1>
-        <p className="text-gray-600 mt-4">Vous n'avez pas les droits pour accéder à cette page.</p>
+  if(loading){
+    return(
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-8 h-8 border-4 border-indigo-500
+                        border-t-transparent rounded-full animate-spin" />
       </div>
-    </div>
-  );
+    )
+  }
 
-  return children;
+  if(!user){
+    return <Navigate to= "/login" replace/>
+  }
+   if (role && user.role !== role) {
+    return <Navigate to="/403" replace />
+  }
+
+  return <Outlet />
 }
