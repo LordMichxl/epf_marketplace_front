@@ -22,4 +22,11 @@ function App() {
   )
 }
 
-export default App
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </div>
+        </CartProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}
