@@ -103,7 +103,7 @@ export default function CartPage() {
             {items.map((item) => (
               <div key={item.id} className="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-4">
 
-                {/* Image */}
+                {/* Images */}
                 <div className="w-20 h-20 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
                   {item.product?.images?.[0] ? (
                     <img
@@ -130,7 +130,7 @@ export default function CartPage() {
                   </p>
                 </div>
 
-                {/* Quantité */}
+                {/* Quantités */}
                 <div className="flex items-center border border-gray-200 rounded-lg">
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -147,7 +147,7 @@ export default function CartPage() {
                   </button>
                 </div>
 
-                {/* Supprimer */}
+                {/* Supprimé */}
                 <button
                   onClick={() => removeItem(item.id)}
                   className="p-2 text-red-400 hover:text-red-600 transition-colors"
