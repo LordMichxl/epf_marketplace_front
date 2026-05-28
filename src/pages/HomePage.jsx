@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { getProducts, getCategories } from "../services/productService";
 import { ShoppingBag, Tag, Star, ArrowRight } from "lucide-react";
 
@@ -26,20 +26,19 @@ export default function HomePage() {
 
   return (
     <div>
-      {/* Hero */}
       <section className="bg-gradient-to-br from-indigo-600 to-purple-700 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold mb-4">Bienvenue sur EPF Market</h1>
           <p className="text-xl text-indigo-100 mb-8">
             Achetez et vendez en toute confiance sur notre marketplace
           </p>
-          <Link
+          <NavLink
             to="/products"
             className="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold hover:bg-indigo-50 transition-colors text-lg"
           >
             <ShoppingBag size={22} />
             Découvrir les produits
-          </Link>
+          </NavLink>
         </div>
       </section>
 
@@ -54,7 +53,7 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {categories.slice(0, 6).map((cat) => (
-              <Link
+              <NavLink
                 key={cat.id}
                 to={`/products?category_id=${cat.id}`}
                 className="bg-white rounded-2xl p-4 text-center shadow-sm hover:shadow-md hover:border-indigo-300 border border-transparent transition-all"
@@ -62,7 +61,7 @@ export default function HomePage() {
                 <div className="text-3xl mb-2">🏷️</div>
                 <p className="text-sm font-medium text-gray-700">{cat.name}</p>
                 <p className="text-xs text-gray-400 mt-1">{cat.products_count || ""}</p>
-              </Link>
+              </NavLink>
             ))}
           </div>
         </section>
@@ -75,12 +74,12 @@ export default function HomePage() {
             <Star size={22} className="text-indigo-600" />
             Nouveaux produits
           </h2>
-          <Link
+          <NavLink
             to="/products"
             className="flex items-center gap-1 text-indigo-600 hover:text-indigo-700 font-medium text-sm"
           >
             Voir tout <ArrowRight size={16} />
-          </Link>
+          </NavLink>
         </div>
 
         {loading ? (
@@ -90,7 +89,7 @@ export default function HomePage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product) => (
-              <Link
+              <NavLink
                 key={product.id}
                 to={`/products/${product.id}`}
                 className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group"
@@ -113,7 +112,7 @@ export default function HomePage() {
                     {Number(product.effective_price || product.price).toLocaleString()} FCFA
                   </p>
                 </div>
-              </Link>
+              </NavLink>
             ))}
           </div>
         )}

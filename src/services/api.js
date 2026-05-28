@@ -15,7 +15,9 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
-});
+  },
+  (error) => Promise.reject(error)
+);
 
 // Si le backend répond 401 = token expiré → déconnexion auto
 api.interceptors.response.use(

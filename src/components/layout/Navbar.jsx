@@ -1,15 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink , useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { ShoppingCart, User, LogOut, Search } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    await logout();
-    navigate("/login");
-  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -22,24 +17,26 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
 
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold text-indigo-600">
-          EPF Market
-        </Link>
+        <NavLink  to="/" className="text-xl font-bold text-indigo-600">
+         <h1 className="text-2xl font-semibold text-black">
+                EPF <span className="text-indigo-500">Market</span>
+              </h1>
+        </NavLink >
 
         {/* Liens du milieu */}
         <div className="hidden md:flex items-center gap-6">
-          <Link to="/products" className="text-gray-600 hover:text-indigo-600 transition-colors">
+          <NavLink  to="/products" className="text-gray-600 hover:text-indigo-600 transition-colors">
             Produits
-          </Link>
+          </NavLink>
           {user?.role === "seller" && (
-            <Link to="/seller/dashboard" className="text-gray-600 hover:text-indigo-600">
+            <NavLink  to="/seller/dashboard" className="text-gray-600 hover:text-indigo-600">
               Dashboard Vendeur
-            </Link>
+            </NavLink>
           )}
           {user?.role === "admin" && (
-            <Link to="/admin" className="text-gray-600 hover:text-indigo-600">
+            <NavLink  to="/admin" className="text-gray-600 hover:text-indigo-600">
               Admin
-            </Link>
+            </NavLink>
           )}
         </div>
 
@@ -67,33 +64,36 @@ export default function Navbar() {
           {user ? (
             <>
               {user.role === "buyer" && (
-                <Link to="/cart" className="p-2 text-gray-600 hover:text-indigo-600">
+                <NavLink  to="/cart" className="p-2 text-gray-600 hover:text-indigo-600">
                   <ShoppingCart size={22} />
-                </Link>
+                </NavLink>
               )}
-              <Link to="/profile" className="flex items-center gap-2 text-gray-700 hover:text-indigo-600">
-                <User size={20} />
-                <span className="hidden md:block text-sm font-medium">{user.name}</span>
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-1 text-sm text-red-500 hover:text-red-700"
+             <div className="flex items-center space-x-4">
+              <NavLink 
+                to="/profile" 
+                className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
               >
-                <LogOut size={18} />
-                <span className="hidden md:block">Déconnexion</span>
+                Profil
+              </NavLink>
+              <button
+                onClick={logout}
+                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-500 transition-colors"
+              >
+                Déconnexion
               </button>
+            </div>
             </>
           ) : (
             <>
-              <Link to="/login" className="text-sm text-gray-600 hover:text-indigo-600">
+              <NavLink  to="/login" className="text-sm text-gray-600 hover:text-indigo-600">
                 Connexion
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/register"
                 className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
               >
                 S'inscrire
-              </Link>
+              </NavLink>
             </>
           )}
         </div>
