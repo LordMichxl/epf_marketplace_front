@@ -34,3 +34,28 @@ export const getCategory = (id) => {
 export const searchAll = (q, type = "all", limit = 12) => {
   return api.get("/search", { params: { q, type, limit } });
 };
+
+//Partie seller
+export const getMyProducts = async (statut = '') => {
+  const params = statut ?{ statut } : {};
+  const data = await api.get("/products/my-products", { params })
+  return data ;
+}
+export const createProduct = (formData) => {
+  return api.post('/products', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
+export const updateProduct = (id, formData) => {
+  formData.append('_method', 'PUT')
+  return api.post(`/products/${id}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
+export const deleteProduct = (id) => {
+  return api.delete(`/products/${id}`)
+}
+
+export const getStatistics = () => {
+  return api.get('/seller/statistics')
+}
