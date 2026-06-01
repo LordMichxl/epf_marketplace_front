@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import toast from "react-hot-toast";
 import { Heart, ShoppingCart } from "lucide-react";
+import { CartContext } from "../../contexts/CartContext";
 
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
     fetchFavorites();
@@ -33,12 +36,13 @@ export default function FavoritesPage() {
     }
   };
 
-  const addToCart = async (productId) => {
+  const handleAddToCart = async (productId) => {
     try {
-      await api.post("/cart/add", { product_id: productId, quantity: 1 });
+      await addToCart(productId, 1);
       toast.success("Ajouté au panier !");
+      navigate("/cart");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Erreur");
+      toast.error(err.response?.data?.message || "Erreur lors de l'ajout au panier");
     }
   };
 
@@ -109,7 +113,7 @@ export default function FavoritesPage() {
                       {Number(price).toLocaleString()} FCFA
                     </span>
                     <button
-                      onClick={() => addToCart(product.id)}
+                      onClick={() => handleAddToCart(product.id)}
                       className="p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                     >
                       <ShoppingCart size={16} />

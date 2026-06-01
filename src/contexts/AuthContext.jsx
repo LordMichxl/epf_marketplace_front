@@ -14,22 +14,22 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    if (token) {
-      authService.me()
-        .then(data => setUser(data))
-        .catch(() => {
-          localStorage.removeItem('token')
-        })
-        .finally(() => setLoading(false))
-    } else {
-      setLoading(false)
+    const user = localStorage.getItem('user')
+    if (token && user) {
+      try {
+        setUser(JSON.parse(user))
+      } catch {
+        localStorage.removeItem('user')
+      }
     }
+    setLoading(false)
   }, [])
 
- // --- Inscription ---
+  // --- Inscription ---
   const register = async (formData) => {
     const data = await authService.register(formData)
     localStorage.setItem('token', data.token)
+    localStorage.setItem('user', JSON.stringify(data.user))
     setUser(data.user)
     toast.success(data.message)
     if (data.user.role === 'seller') navigate('/seller/dashboard')
@@ -41,6 +41,7 @@ export function AuthProvider({ children }) {
   const login = async (formData) => {
     const data = await authService.login(formData)
     localStorage.setItem('token', data.token)
+    localStorage.setItem('user', JSON.stringify(data.user))
     setUser(data.user)
     toast.success(data.message)
 

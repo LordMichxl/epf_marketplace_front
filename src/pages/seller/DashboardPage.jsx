@@ -1,9 +1,3 @@
-function DashboardPage() {
-  return (
-    <div>
-      <h1>Seller Dashboard</h1>
-    </div>
-  )
+export default function DashboardPage() {
+  return <div></div>
 }
-
-export default DashboardPage
