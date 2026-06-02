@@ -42,7 +42,7 @@ export default function CartPage() {
 
   const handleRemoveItem = async (cartItemId) => {
     try {
-      await api.delete(`/cart/items/${cartItemId}`);
+      await removeFromCart(cartItemId);
       toast.success("Article retiré");
       await fetchCart();
     } catch {
