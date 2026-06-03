@@ -176,7 +176,7 @@ export default function AddProductPage() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
-                Prix (XOF) *
+                Prix (F CFA) *
               </label>
               <input
                 type="number"
@@ -238,7 +238,7 @@ export default function AddProductPage() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
-                Prix promo (XOF)
+                Prix promo (F CFA)
               </label>
               <input
                 type="number"

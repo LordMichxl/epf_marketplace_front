@@ -13,12 +13,12 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <nav className="max-w-full bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
 
         {/* Logo */}
         <NavLink  to="/" className="text-xl font-bold text-indigo-600">
-         <h1 className="text-2xl font-semibold text-black">
+         <h1 className="text-xl font-semibold text-black">
                 EPF <span className="text-indigo-500">Market</span>
               </h1>
         </NavLink >
@@ -29,9 +29,17 @@ export default function Navbar() {
             Produits
           </NavLink>
           {user?.role === "seller" && (
-            <NavLink  to="/seller/dashboard" className="text-gray-600 hover:text-indigo-600">
-              Dashboard Vendeur
-            </NavLink>
+            <>
+              <NavLink to="/seller/dashboard" className="text-gray-600 hover:text-indigo-600">
+                Dashboard Vendeur
+              </NavLink>
+              <NavLink to="/seller/products" className="text-gray-600 hover:text-indigo-600">
+                Mes produits
+              </NavLink>
+              <NavLink to="/seller/orders" className="text-gray-600 hover:text-indigo-600">
+                Mes commandes
+              </NavLink>
+            </>
           )}
           {user?.role === "admin" && (
             <NavLink  to="/admin" className="text-gray-600 hover:text-indigo-600">

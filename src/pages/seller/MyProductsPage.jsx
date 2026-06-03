@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import productService from '../../services/productService'
+import { getMyProducts, deleteProduct } from '../../services/productService'
 
 const STATUTS = [
   { value: '',          label: 'Tous' },
@@ -23,7 +23,7 @@ export default function MyProductsPage() {
   const loadProducts = async () => {
     setLoading(true)
     try {
-      const data = await productService.getMyProducts(status)
+      const data = await getMyProducts(status)
       setProducts(data)
     } catch {
       toast.error('Impossible de charger les produits')
@@ -36,7 +36,7 @@ export default function MyProductsPage() {
     if (!confirm('Supprimer ce produit définitivement ?')) return
 
     try {
-      await productService.delete(id)
+      await deleteProduct(id)
       toast.success('Produit supprimé')
       setProducts(prev => prev.filter(p => p.id !== id))
     } catch {
@@ -47,7 +47,6 @@ export default function MyProductsPage() {
   return (
     <div className="p-6">
 
-      {/* ── En-tête ── */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-xl font-semibold text-slate-900">Mes produits</h1>
@@ -55,7 +54,6 @@ export default function MyProductsPage() {
             {products.length} produit{products.length > 1 ? 's' : ''}
           </p>
         </div>
-        {/* Bouton vers le formulaire d'ajout */}
         <NavLink
           to="/seller/products/new"
           className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm
@@ -66,7 +64,6 @@ export default function MyProductsPage() {
         </NavLink>
       </div>
 
-      {/* ── Onglets de filtre ── */}
       <div className="flex gap-2 mb-6 bg-slate-100 p-1 rounded-xl w-fit">
         {STATUTS.map(s => (
           <button
@@ -83,7 +80,6 @@ export default function MyProductsPage() {
         ))}
       </div>
 
-      {/* ── Contenu ── */}
       {loading ? (
         <div className="flex justify-center items-center h-40">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
@@ -112,7 +108,7 @@ export default function MyProductsPage() {
 }
 
 
-// ── Composant carte produit (vendeur) ──
+// Composant carte produit (vendeur) 
 function CarteProduitsVendeur({ product, onEdit, onDelete }) {
 
   // Couleurs selon le statut
@@ -128,10 +124,10 @@ function CarteProduitsVendeur({ product, onEdit, onDelete }) {
 
       {/* Image du produit */}
       <div className="relative h-44 bg-slate-100">
-        {product.images?.[0] ? (
+        {product.image ? (
           <img
-            src={product.images[0].url}
-            alt={product.name}
+            src={product.image}
+            alt={product.title}
             className="w-full h-full object-cover"
           />
         ) : (
@@ -154,16 +150,16 @@ function CarteProduitsVendeur({ product, onEdit, onDelete }) {
       <div className="p-3">
         {/* Nom */}
         <h3 className="font-medium text-slate-900 text-sm truncate mb-1">
-          {product.name}
+          {product.title}
         </h3>
 
         {/* Prix et stock */}
         <div className="flex items-center justify-between mb-3">
           <span className="font-semibold text-slate-900">
-            {Number(product.price).toLocaleString('fr-FR')} XOF
+            {Number(product.price).toLocaleString('fr-FR')} F CFA
           </span>
           <span className="text-xs text-slate-400">
-            Stock : {product.stock}
+            Stock : {product.quantity}
           </span>
         </div>
 

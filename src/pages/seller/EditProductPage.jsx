@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate} from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import {
-  getOne,
+  getProduct,
   updateProduct,
   getCategories
 } from '../../services/productService'
@@ -37,7 +37,7 @@ export default function EditProductPage() {
     // Lancer les deux appels en parallèle
     Promise.all([
       getCategories(),
-      getOne(id)
+      getProduct(id)
     ])
       .then(([catRes, productRes]) => {
         // Catégories
@@ -223,7 +223,7 @@ export default function EditProductPage() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
-                Prix (XOF) *
+                Prix (F CFA) *
               </label>
               <input
                 type="number"
@@ -286,7 +286,7 @@ export default function EditProductPage() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
-                Prix promo (XOF)
+                Prix promo (F CFA)
               </label>
               <input
                 type="number"

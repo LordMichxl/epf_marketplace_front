@@ -37,9 +37,9 @@ export const searchAll = (q, type = "all", limit = 12) => {
 
 //Partie seller
 export const getMyProducts = async (statut = '') => {
-  const params = statut ?{ statut } : {};
-  const data = await api.get("/products/my-products", { params })
-  return data ;
+  const params = statut ? { status: statut } : {};
+  const res = await api.get("/products/my-products", { params })
+  return res.data.data ?? res.data
 }
 export const createProduct = (formData) => {
   return api.post('/products', formData, {
