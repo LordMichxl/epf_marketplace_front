@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { getProducts, getCategories } from "../services/productService";
 import { Search, SlidersHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ProductsPage() {
+  const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    search: "",
-    category_id: "",
+    search: searchParams.get("q") || "",
+    category_id: searchParams.get("category_id") || "",
     min_price: "",
     max_price: "",
     sort: "newest",
@@ -132,7 +133,6 @@ export default function ProductsPage() {
 
         {/* Contenu principal */}
         <div className="flex-1">
-          {/* Barre de recherche */}
           <div className="mb-6 flex gap-2">
             <div className="flex-1 relative">
               <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -146,7 +146,6 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          {/* Grille produits */}
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
@@ -163,7 +162,6 @@ export default function ProductsPage() {
             </div>
           )}
 
-          {/* Pagination */}
           {pagination.last_page > 1 && (
             <div className="flex justify-center items-center gap-4 mt-10">
               <button
@@ -200,9 +198,9 @@ function ProductCard({ product }) {
       className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group"
     >
       <div className="relative h-48 bg-gray-100">
-        {product.images?.[0] ? (
+        {product.image ? (
           <img
-            src={product.images[0]}
+            src={product.image}
             alt={product.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
@@ -224,8 +222,8 @@ function ProductCard({ product }) {
           <span className="text-lg font-bold text-indigo-600">
             {Number(price).toLocaleString()} FCFA
           </span>
-          {product.average_rating > 0 && (
-            <span className="text-xs text-yellow-500">⭐ {product.average_rating}</span>
+          {product.rating > 0 && (
+            <span className="text-xs text-yellow-500">⭐ {product.rating}</span>
           )}
         </div>
       </div>
