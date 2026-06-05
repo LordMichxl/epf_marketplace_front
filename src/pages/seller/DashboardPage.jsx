@@ -134,7 +134,7 @@ function CartesAnalytiques({ stats }) {
       <div className="bg-white rounded-lg shadow p-6 border-l-4 border-orange-500">
         <p className="text-slate-500 text-sm font-medium">Panier moyen</p>
         <p className="text-3xl font-bold text-slate-900 mt-2">
-          {Number(stats.average_order_value).toLocaleString('fr-FR')} XOF
+          {Number(stats.average_order_value).toLocaleString('fr-FR')} F CFA
         </p>
       </div>
 
@@ -184,7 +184,7 @@ function CommandesRecentes({ orders }) {
                   {order.order_number}
                 </td>
                 <td className="px-6 py-4 text-sm text-slate-700">
-                  {Number(order.total).toLocaleString('fr-FR')} XOF
+                  {Number(order.total).toLocaleString('fr-FR')} F CFA
                 </td>
                 <td className="px-6 py-4">
                   <span className={`px-3 py-1 rounded-full text-xs font-medium
@@ -238,7 +238,7 @@ function MeilleursProduits({ products }) {
                   {product.sales_count}
                 </td>
                 <td className="px-6 py-4 text-sm font-semibold text-emerald-600">
-                  {Number(product.revenue).toLocaleString('fr-FR')} XOF
+                  {Number(product.revenue).toLocaleString('fr-FR')} F CFA
                 </td>
               </tr>
             ))}
@@ -297,7 +297,7 @@ function VentesParPeriode({ sales, period }) {
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip 
-                formatter={(value) => `${Number(value).toLocaleString('fr-FR')} XOF`}
+                formatter={(value) => `${Number(value).toLocaleString('fr-FR')} F CFA`}
               />
               <Legend />
               <Line 

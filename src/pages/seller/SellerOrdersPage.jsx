@@ -266,7 +266,7 @@ function CarteCommande({ order, isUpdating, onChangerStatut }) {
           <p className="text-xs text-slate-400">Total vendeur</p>
           <p className="font-semibold text-slate-900">
             {/* total_amount est une string "15000.00" → on convertit */}
-            {Number(order.total_amount).toLocaleString('fr-FR')} XOF
+            {Number(order.total_amount).toLocaleString('fr-FR')} F CFA
           </p>
         </div>
         
