@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 export default function ProtectedRoute({ children, role }) {
@@ -21,5 +21,5 @@ export default function ProtectedRoute({ children, role }) {
     </div>
   );
 
-  return children;
+  return children ? children : <Outlet />;
 }

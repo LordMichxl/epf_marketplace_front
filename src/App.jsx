@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route,Navigate } from 'react-router-dom'
 import ProtectedRoute from './components/ProtectedRoute'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/auth/LoginPage'
@@ -31,22 +31,30 @@ function App() {
       <Route path= "/search" element={<SearchPage />} />
   
 
-      {/* Routes protégées */}
+      {/* Routes protégées - Profil commun */}
       <Route element={<ProtectedRoute />}>
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/seller/orders" element={<SellerOrdersPage />} />
-        <Route path="/seller/dashboard" element={<DashboardPage />} />
-        <Route path="/seller/products" element={<MyProductsPage />} />
-        <Route path ="/seller/products/new" element={<AddProductPage />} />
-        <Route path ="/seller/products/:id/edit" element={<EditProductPage />} 
-         <Route path="/cart" element={<CartPage />} />
-         <Route path="/orders" element={<OrdersPage />} />
-         <Route path="/favorites" element={<FavoritesPage />} />
-         <Route path="/messages" element={<MessagesPage />} />
-/>
-         <Route path="*" element={<Navigate to="/" />} />
-        
       </Route>
+
+      {/* Routes protégées - Vendeur */}
+      <Route element={<ProtectedRoute role="seller" />}>
+        <Route path="/seller/dashboard" element={<DashboardPage />} />
+        <Route path="/seller/orders" element={<SellerOrdersPage />} />
+        <Route path="/seller/products" element={<MyProductsPage />} />
+        <Route path="/seller/products/new" element={<AddProductPage />} />
+        <Route path="/seller/products/:id/edit" element={<EditProductPage />} />
+      </Route>
+
+      {/* Routes protégées - Acheteur */}
+      <Route element={<ProtectedRoute role="buyer" />}>
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
+        <Route path="/messages" element={<MessagesPage />} />
+      </Route>
+
+      {/* Route par défaut */}
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   )
 }
