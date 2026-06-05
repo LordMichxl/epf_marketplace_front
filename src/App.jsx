@@ -12,6 +12,7 @@ import ProfilePage from "./pages/auth/ProfilePage";
 import ProductsPage from "./pages/ProductsPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import SearchPage from "./pages/SearchPage";
+import SellerProfilePage from "./pages/SellerProfilePage";
 
 import CartPage from "./pages/buyer/CartPage";
 import OrdersPage from "./pages/buyer/OrdersPage";
@@ -41,6 +42,7 @@ export default function App() {
               <Route path="/products" element={<ProductsPage />} />
               <Route path="/products/:id" element={<ProductDetailPage />} />
               <Route path="/search" element={<SearchPage />} />
+              <Route path="/sellers/:id" element={<SellerProfilePage />} />
 
               <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
               <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />

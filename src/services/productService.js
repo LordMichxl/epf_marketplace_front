@@ -34,3 +34,8 @@ export const getCategory = (id) => {
 export const searchAll = (q, type = "all", limit = 12) => {
   return api.get("/search", { params: { q, type, limit } });
 };
+
+// Créer un avis/notation sur un produit
+export const createProductReview = (productId, data) => {
+  return api.post(`/products/${productId}/reviews`, data);
+};
