@@ -9,7 +9,11 @@ import ProfilePage from './pages/auth/ProfilePage'
 import ProductsPage from './pages/ProductsPage'
 import ProductPageDetail from './pages/ProductDetailPage'
 import SearchPage from './pages/SearchPage'
-
+import SellerOrdersPage from './pages/seller/SellerOrdersPage'
+import DashboardPage from './pages/seller/DashboardPage'
+import MyProductsPage from './pages/seller/MyProductsPage'
+import AddProductPage from './pages/seller/AddProductPage'
+import EditProductPage from './pages/seller/EditProductPage'
 
 function App() {
   return (
@@ -26,6 +30,12 @@ function App() {
       {/* Routes protégées */}
       <Route element={<ProtectedRoute />}>
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/seller/orders" element={<SellerOrdersPage />} />
+        <Route path="/seller/dashboard" element={<DashboardPage />} />
+        <Route path="/seller/products" element={<MyProductsPage />} />
+        <Route path ="/seller/products/new" element={<AddProductPage />} />
+        <Route path ="/seller/products/:id/edit" element={<EditProductPage />} />
+        
         
       </Route>
     </Routes>
