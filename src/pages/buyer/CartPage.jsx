@@ -12,6 +12,11 @@ export default function CartPage() {
   const [loading, setLoading] = useState(true);
   const [ordering, setOrdering] = useState(false);
   const [coupon, setCoupon] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [phone, setPhone] = useState("");
+  const [fullName, setFullName] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,7 +28,7 @@ export default function CartPage() {
       const res = await api.get("/cart");
       setItems(res.data.items || []);
       setTotal(res.data.total || 0);
-    } catch (err) {
+    } catch {
       toast.error("Erreur lors du chargement du panier");
     } finally {
       setLoading(false);
@@ -33,7 +38,7 @@ export default function CartPage() {
   const handleUpdateQuantity = async (cartItemId, quantity) => {
     if (quantity < 1) return;
     try {
-      await api.put(`/cart/items/${cartItemId}`, { quantity });
+      await updateQuantity(cartItemId, quantity);
       await fetchCart();
     } catch (err) {
       toast.error(err.response?.data?.message || "Erreur");
@@ -43,8 +48,8 @@ export default function CartPage() {
   const handleRemoveItem = async (cartItemId) => {
     try {
       await removeFromCart(cartItemId);
-      toast.success("Article retiré");
       await fetchCart();
+      toast.success("Article retiré");
     } catch {
       toast.error("Erreur");
     }
@@ -52,7 +57,7 @@ export default function CartPage() {
 
   const handleClearCart = async () => {
     try {
-      await api.delete("/cart/clear");
+      await clearCart();
       setItems([]);
       setTotal(0);
       toast.success("Panier vidé");
@@ -62,14 +67,43 @@ export default function CartPage() {
   };
 
   const placeOrder = async () => {
+    if (!fullName) {
+      toast.error("Le nom complet est obligatoire");
+      return;
+    }
+    if (!address) {
+      toast.error("L'adresse de livraison est obligatoire");
+      return;
+    }
+    if (!city) {
+      toast.error("La ville de livraison est obligatoire");
+      return;
+    }
+    if (!postalCode) {
+      toast.error("Le code postal est obligatoire");
+      return;
+    }
+    if (!phone) {
+      toast.error("Le téléphone est obligatoire");
+      return;
+    }
     setOrdering(true);
     try {
-      const body = {};
-      if (coupon) body.coupon_code = coupon;
-      await api.post("/orders", body);
+      const body = {
+        customer_name: fullName.trim(),
+        shipping_address: address.trim(),
+        shipping_city: city.trim(),
+        shipping_postal_code: postalCode.trim(),
+        shipping_phone: phone.trim().replace(/\s+/g, ''),
+      };
+      if (coupon) body.coupon_code = coupon.trim();
+      console.log("Body envoyé:", body);
+      const response = await api.post("/orders", body);
+      console.log("Réponse API:", response);
       toast.success("Commande passée avec succès !");
       navigate("/orders");
     } catch (err) {
+      console.log("Erreur complète:", err.response?.data);
       toast.error(err.response?.data?.message || "Erreur lors de la commande");
     } finally {
       setOrdering(false);
@@ -131,35 +165,23 @@ export default function CartPage() {
 
                 {/* Quantité */}
                 <div className="flex items-center border border-gray-200 rounded-lg">
-                  <button
-                    onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
-                    className="px-2 py-1 text-gray-600 hover:text-indigo-600"
-                  >
+                  <button onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)} className="px-2 py-1 text-gray-600 hover:text-indigo-600">
                     <Minus size={16} />
                   </button>
                   <span className="px-3 py-1 font-medium">{item.quantity}</span>
-                  <button
-                    onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
-                    className="px-2 py-1 text-gray-600 hover:text-indigo-600"
-                  >
+                  <button onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)} className="px-2 py-1 text-gray-600 hover:text-indigo-600">
                     <Plus size={16} />
                   </button>
                 </div>
 
                 {/* Supprimer */}
-                <button
-                  onClick={() => handleRemoveItem(item.id)}
-                  className="p-2 text-red-400 hover:text-red-600"
-                >
+                <button onClick={() => handleRemoveItem(item.id)} className="p-2 text-red-400 hover:text-red-600">
                   <Trash2 size={18} />
                 </button>
               </div>
             ))}
 
-            <button
-              onClick={handleClearCart}
-              className="text-sm text-red-500 hover:text-red-700"
-            >
+            <button onClick={handleClearCart} className="text-sm text-red-500 hover:text-red-700">
               Vider le panier
             </button>
           </div>
@@ -186,6 +208,82 @@ export default function CartPage() {
               </div>
             </div>
 
+            {/* Nom complet */}
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 mb-1 block">
+                Nom complet *
+              </label>
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Ex: Jean Dupont"
+                autoComplete="name"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            {/* Adresse */}
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 mb-1 block">
+                Adresse de livraison *
+              </label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Ex: 12 rue Dakar"
+                autoComplete="street-address"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            {/* Ville */}
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 mb-1 block">
+                Ville de livraison *
+              </label>
+              <input
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="Ex: Dakar"
+                autoComplete="address-level2"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            {/* Code postal */}
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 mb-1 block">
+                Code postal *
+              </label>
+              <input
+                type="text"
+                value={postalCode}
+                onChange={(e) => setPostalCode(e.target.value)}
+                placeholder="Ex: 14200"
+                autoComplete="postal-code"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            {/* Téléphone */}
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 mb-1 block">
+                Téléphone *
+              </label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Ex: 77 123 45 67"
+                autoComplete="tel"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            {/* Coupon */}
             <div className="mb-4">
               <label className="text-sm font-medium text-gray-700 mb-1 block">
                 Code coupon
@@ -195,6 +293,7 @@ export default function CartPage() {
                 value={coupon}
                 onChange={(e) => setCoupon(e.target.value)}
                 placeholder="Ex: PROMO10"
+                autoComplete="off"
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>

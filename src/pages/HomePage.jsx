@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import { getProducts, getCategories } from "../services/productService";
-import { ShoppingBag, Tag, Star, ArrowRight } from "lucide-react";
+import { ShoppingBag, Tag, Star, ArrowRight, Package } from "lucide-react";
 
 export default function HomePage() {
+  const { user } = useAuth();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -64,6 +66,29 @@ export default function HomePage() {
                 <p className="text-xs text-gray-400 mt-1">{cat.products_count || ""}</p>
               </Link>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* Mes commandes pour les acheteurs */}
+      {user?.role === "buyer" && (
+        <section className="bg-indigo-50 py-12 px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2 mb-2">
+                  <Package size={24} className="text-indigo-600" />
+                  Mes commandes
+                </h2>
+                <p className="text-gray-600">Consulte l'historique et le statut de tes commandes</p>
+              </div>
+              <Link
+                to="/orders"
+                className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+              >
+                Voir mes commandes
+              </Link>
+            </div>
           </div>
         </section>
       )}

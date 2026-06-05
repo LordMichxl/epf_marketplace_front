@@ -91,6 +91,14 @@ export default function Navbar() {
                 >
                   Profil
                 </NavLink>
+                {user.role === "buyer" && (
+                  <NavLink
+                    to="/orders"
+                    className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+                  >
+                    Mes commandes
+                  </NavLink>
+                )}
                 <button
                   onClick={logout}
                   className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-500 transition-colors"
