@@ -10,8 +10,10 @@ export function CartProvider({ children }) {
     try {
       const res = await api.get("/cart");
       const items = res.data.items || [];
-      setCartCount(items.length);
-    } catch {}
+      setCartCount(items.reduce((acc, item) => acc + item.quantity, 0));
+    } catch {
+      setCartCount(0);
+    }
   };
 
   const addToCart = async (productId, quantity = 1) => {
@@ -19,8 +21,23 @@ export function CartProvider({ children }) {
     await fetchCart();
   };
 
+  const removeFromCart = async (cartItemId) => {
+    await api.delete(`/cart/items/${cartItemId}`);
+    await fetchCart();
+  };
+
+  const updateQuantity = async (cartItemId, quantity) => {
+    await api.put(`/cart/items/${cartItemId}`, { quantity });
+    await fetchCart();
+  };
+
+  const clearCart = async () => {
+    await api.delete("/cart/clear");
+    setCartCount(0);
+  };
+
   return (
-    <CartContext.Provider value={{ cartCount, fetchCart, addToCart }}>
+    <CartContext.Provider value={{ cartCount, fetchCart, addToCart, removeFromCart, updateQuantity, clearCart }}>
       {children}
     </CartContext.Provider>
   );

@@ -14,6 +14,10 @@ import DashboardPage from './pages/seller/DashboardPage'
 import MyProductsPage from './pages/seller/MyProductsPage'
 import AddProductPage from './pages/seller/AddProductPage'
 import EditProductPage from './pages/seller/EditProductPage'
+import CartPage from "./pages/buyer/CartPage";
+import OrdersPage from "./pages/buyer/OrdersPage";
+import FavoritesPage from "./pages/buyer/FavoritesPage";
+import MessagesPage from "./pages/buyer/MessagesPage";
 
 function App() {
   return (
@@ -34,8 +38,13 @@ function App() {
         <Route path="/seller/dashboard" element={<DashboardPage />} />
         <Route path="/seller/products" element={<MyProductsPage />} />
         <Route path ="/seller/products/new" element={<AddProductPage />} />
-        <Route path ="/seller/products/:id/edit" element={<EditProductPage />} />
-        
+        <Route path ="/seller/products/:id/edit" element={<EditProductPage />} 
+         <Route path="/cart" element={<CartPage />} />
+         <Route path="/orders" element={<OrdersPage />} />
+         <Route path="/favorites" element={<FavoritesPage />} />
+         <Route path="/messages" element={<MessagesPage />} />
+/>
+         <Route path="*" element={<Navigate to="/" />} />
         
       </Route>
     </Routes>

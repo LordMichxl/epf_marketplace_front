@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProduct, getProductReviews } from "../services/productService";
 import { useAuth } from "../hooks/useAuth";
+import { CartContext } from "../contexts/CartContext";
 import { ShoppingCart, Heart, ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
 import api from "../services/api";
@@ -10,6 +11,7 @@ export default function ProductDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { addToCart } = useContext(CartContext);
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,10 +50,11 @@ export default function ProductDetailPage() {
     }
     setAddingToCart(true);
     try {
-      await api.post("/cart/add", { product_id: product.id, quantity });
+      await addToCart(product.id, quantity);
       toast.success("Ajouté au panier !");
+      // On reste sur la page produit — pas de navigate
     } catch (err) {
-      toast.error(err.response?.data?.message || "Erreur");
+      toast.error(err.response?.data?.message || "Erreur lors de l'ajout au panier");
     } finally {
       setAddingToCart(false);
     }
@@ -81,6 +84,7 @@ export default function ProductDetailPage() {
   if (!product) return null;
 
   const price = product.effective_price || product.price;
+  const stock = product.quantity || product.stock || 0;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -135,8 +139,8 @@ export default function ProductDetailPage() {
             {/* Stock */}
             <p className="text-sm mt-2 text-gray-500">
               Stock :{" "}
-              {product.stock > 0 ? (
-                <span className="text-green-600 font-medium">{product.stock} disponibles</span>
+              {stock > 0 ? (
+                <span className="text-green-600 font-medium">{stock} disponibles</span>
               ) : (
                 <span className="text-red-500 font-medium">Rupture de stock</span>
               )}
@@ -148,7 +152,7 @@ export default function ProductDetailPage() {
             </p>
 
             {/* Quantité + Actions */}
-            {product.stock > 0 && user && user.role !== "seller" && user.role !== "admin" && (
+            {stock > 0 && user && user.role !== "seller" && user.role !== "admin" && (
               <div className="mt-6 space-y-3">
                 <div className="flex items-center gap-3">
                   <label className="text-sm font-medium text-gray-700">Quantité :</label>
@@ -161,7 +165,7 @@ export default function ProductDetailPage() {
                     </button>
                     <span className="px-4 py-1 font-medium">{quantity}</span>
                     <button
-                      onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                      onClick={() => setQuantity(Math.min(stock, quantity + 1))}
                       className="px-3 py-1 text-gray-600 hover:text-indigo-600 text-lg"
                     >
                       +

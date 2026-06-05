@@ -1,10 +1,19 @@
-import { NavLink , useNavigate } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { ShoppingCart, User, LogOut, Search } from "lucide-react";
+import { CartContext } from "../../contexts/CartContext";
+import { ShoppingCart, Search } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const { cartCount, fetchCart } = useContext(CartContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.role === "buyer") {
+      fetchCart();
+    }
+  }, [user]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -17,15 +26,15 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
 
         {/* Logo */}
-        <NavLink  to="/" className="text-xl font-bold text-indigo-600">
-         <h1 className="text-xl font-semibold text-black">
-                EPF <span className="text-indigo-500">Market</span>
-              </h1>
-        </NavLink >
+        <NavLink to="/" className="text-xl font-bold text-indigo-600">
+          <h1 className="text-2xl font-semibold text-black">
+            EPF <span className="text-indigo-500">Market</span>
+          </h1>
+        </NavLink>
 
         {/* Liens du milieu */}
         <div className="hidden md:flex items-center gap-6">
-          <NavLink  to="/products" className="text-gray-600 hover:text-indigo-600 transition-colors">
+          <NavLink to="/products" className="text-gray-600 hover:text-indigo-600 transition-colors">
             Produits
           </NavLink>
           {user?.role === "seller" && (
@@ -42,7 +51,7 @@ export default function Navbar() {
             </>
           )}
           {user?.role === "admin" && (
-            <NavLink  to="/admin" className="text-gray-600 hover:text-indigo-600">
+            <NavLink to="/admin" className="text-gray-600 hover:text-indigo-600">
               Admin
             </NavLink>
           )}
@@ -71,29 +80,44 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           {user ? (
             <>
+              {/* Icône panier avec compteur */}
               {user.role === "buyer" && (
-                <NavLink  to="/cart" className="p-2 text-gray-600 hover:text-indigo-600">
+                <NavLink to="/cart" className="relative p-2 text-gray-600 hover:text-indigo-600">
                   <ShoppingCart size={22} />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                      {cartCount}
+                    </span>
+                  )}
                 </NavLink>
               )}
-             <div className="flex items-center space-x-4">
-              <NavLink 
-                to="/profile" 
-                className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
-              >
-                Profil
-              </NavLink>
-              <button
-                onClick={logout}
-                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-500 transition-colors"
-              >
-                Déconnexion
-              </button>
-            </div>
+
+              <div className="flex items-center space-x-4">
+                <NavLink
+                  to="/profile"
+                  className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+                >
+                  Profil
+                </NavLink>
+                {user.role === "buyer" && (
+                  <NavLink
+                    to="/orders"
+                    className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+                  >
+                    Mes commandes
+                  </NavLink>
+                )}
+                <button
+                  onClick={logout}
+                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-500 transition-colors"
+                >
+                  Déconnexion
+                </button>
+              </div>
             </>
           ) : (
             <>
-              <NavLink  to="/login" className="text-sm text-gray-600 hover:text-indigo-600">
+              <NavLink to="/login" className="text-sm text-gray-600 hover:text-indigo-600">
                 Connexion
               </NavLink>
               <NavLink

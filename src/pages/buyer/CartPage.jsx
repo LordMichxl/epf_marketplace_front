@@ -1,14 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { CartContext } from "../../contexts/CartContext";
 import api from "../../services/api";
 import toast from "react-hot-toast";
 import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
 
 export default function CartPage() {
-  const [cart, setCart] = useState(null);
+  const { removeFromCart, updateQuantity, clearCart } = useContext(CartContext);
+  const [items, setItems] = useState([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [ordering, setOrdering] = useState(false);
   const [coupon, setCoupon] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [phone, setPhone] = useState("");
+  const [fullName, setFullName] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,7 +26,8 @@ export default function CartPage() {
   const fetchCart = async () => {
     try {
       const res = await api.get("/cart");
-      setCart(res.data);
+      setItems(res.data.items || []);
+      setTotal(res.data.total || 0);
     } catch {
       toast.error("Erreur lors du chargement du panier");
     } finally {
@@ -26,45 +35,75 @@ export default function CartPage() {
     }
   };
 
-  const updateQuantity = async (cartItemId, quantity) => {
+  const handleUpdateQuantity = async (cartItemId, quantity) => {
     if (quantity < 1) return;
     try {
-      await api.put(`/cart/items/${cartItemId}`, { quantity });
-      fetchCart();
+      await updateQuantity(cartItemId, quantity);
+      await fetchCart();
     } catch (err) {
       toast.error(err.response?.data?.message || "Erreur");
     }
   };
 
-  const removeItem = async (cartItemId) => {
+  const handleRemoveItem = async (cartItemId) => {
     try {
-      await api.delete(`/cart/items/${cartItemId}`);
+      await removeFromCart(cartItemId);
+      await fetchCart();
       toast.success("Article retiré");
-      fetchCart();
     } catch {
       toast.error("Erreur");
     }
   };
 
-  const clearCart = async () => {
+  const handleClearCart = async () => {
     try {
-      await api.delete("/cart/clear");
+      await clearCart();
+      setItems([]);
+      setTotal(0);
       toast.success("Panier vidé");
-      fetchCart();
     } catch {
       toast.error("Erreur");
     }
   };
 
   const placeOrder = async () => {
+    if (!fullName) {
+      toast.error("Le nom complet est obligatoire");
+      return;
+    }
+    if (!address) {
+      toast.error("L'adresse de livraison est obligatoire");
+      return;
+    }
+    if (!city) {
+      toast.error("La ville de livraison est obligatoire");
+      return;
+    }
+    if (!postalCode) {
+      toast.error("Le code postal est obligatoire");
+      return;
+    }
+    if (!phone) {
+      toast.error("Le téléphone est obligatoire");
+      return;
+    }
     setOrdering(true);
     try {
-      const body = {};
-      if (coupon) body.coupon_code = coupon;
-      await api.post("/orders", body);
+      const body = {
+        customer_name: fullName.trim(),
+        shipping_address: address.trim(),
+        shipping_city: city.trim(),
+        shipping_postal_code: postalCode.trim(),
+        shipping_phone: phone.trim().replace(/\s+/g, ''),
+      };
+      if (coupon) body.coupon_code = coupon.trim();
+      console.log("Body envoyé:", body);
+      const response = await api.post("/orders", body);
+      console.log("Réponse API:", response);
       toast.success("Commande passée avec succès !");
       navigate("/orders");
     } catch (err) {
+      console.log("Erreur complète:", err.response?.data);
       toast.error(err.response?.data?.message || "Erreur lors de la commande");
     } finally {
       setOrdering(false);
@@ -76,9 +115,6 @@ export default function CartPage() {
       <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
     </div>
   );
-
-  const items = cart?.items || [];
-  const total = cart?.total || 0;
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -103,11 +139,11 @@ export default function CartPage() {
             {items.map((item) => (
               <div key={item.id} className="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-4">
 
-                {/* Images */}
+                {/* Image */}
                 <div className="w-20 h-20 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  {item.product?.images?.[0] ? (
+                  {item.product?.image ? (
                     <img
-                      src={item.product.images[0]}
+                      src={item.product.image}
                       alt={item.product.title}
                       className="w-full h-full object-cover rounded-xl"
                     />
@@ -118,55 +154,39 @@ export default function CartPage() {
 
                 {/* Infos */}
                 <div className="flex-1">
-                  <Link
-                    to={`/products/${item.product?.id}`}
-                    className="font-semibold text-gray-900 hover:text-indigo-600"
-                  >
+                  <Link to={`/products/${item.product?.id}`} className="font-semibold text-gray-900 hover:text-indigo-600">
                     {item.product?.title}
                   </Link>
-                  <p className="text-sm text-gray-400">{item.product?.seller?.name}</p>
+                  <p className="text-sm text-gray-400">{item.seller?.name}</p>
                   <p className="text-indigo-600 font-bold mt-1">
                     {Number(item.product?.effective_price || item.product?.price).toLocaleString()} FCFA
                   </p>
                 </div>
 
-                {/* Quantités */}
+                {/* Quantité */}
                 <div className="flex items-center border border-gray-200 rounded-lg">
-                  <button
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="px-2 py-1 text-gray-600 hover:text-indigo-600"
-                  >
+                  <button onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)} className="px-2 py-1 text-gray-600 hover:text-indigo-600">
                     <Minus size={16} />
                   </button>
                   <span className="px-3 py-1 font-medium">{item.quantity}</span>
-                  <button
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="px-2 py-1 text-gray-600 hover:text-indigo-600"
-                  >
+                  <button onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)} className="px-2 py-1 text-gray-600 hover:text-indigo-600">
                     <Plus size={16} />
                   </button>
                 </div>
 
-                {/* Supprimé */}
-                <button
-                  onClick={() => removeItem(item.id)}
-                  className="p-2 text-red-400 hover:text-red-600 transition-colors"
-                >
+                {/* Supprimer */}
+                <button onClick={() => handleRemoveItem(item.id)} className="p-2 text-red-400 hover:text-red-600">
                   <Trash2 size={18} />
                 </button>
               </div>
             ))}
 
-            {/* Vider le panier */}
-            <button
-              onClick={clearCart}
-              className="text-sm text-red-500 hover:text-red-700 transition-colors"
-            >
+            <button onClick={handleClearCart} className="text-sm text-red-500 hover:text-red-700">
               Vider le panier
             </button>
           </div>
 
-          {/* Résumé commande */}
+          {/* Résumé */}
           <div className="bg-white rounded-2xl shadow-sm p-6 h-fit sticky top-24">
             <h2 className="text-lg font-bold text-gray-900 mb-4">Résumé</h2>
 
@@ -175,7 +195,7 @@ export default function CartPage() {
                 <div key={item.id} className="flex justify-between text-sm text-gray-600">
                   <span className="truncate flex-1">{item.product?.title} x{item.quantity}</span>
                   <span className="ml-2 font-medium">
-                    {Number((item.product?.effective_price || item.product?.price) * item.quantity).toLocaleString()} FCFA
+                    {Number(item.subtotal).toLocaleString()} FCFA
                   </span>
                 </div>
               ))}
@@ -188,16 +208,92 @@ export default function CartPage() {
               </div>
             </div>
 
+            {/* Nom complet */}
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 mb-1 block">
+                Nom complet *
+              </label>
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Ex: Jean Dupont"
+                autoComplete="name"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            {/* Adresse */}
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 mb-1 block">
+                Adresse de livraison *
+              </label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Ex: 12 rue Dakar"
+                autoComplete="street-address"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            {/* Ville */}
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 mb-1 block">
+                Ville de livraison *
+              </label>
+              <input
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="Ex: Dakar"
+                autoComplete="address-level2"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            {/* Code postal */}
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 mb-1 block">
+                Code postal *
+              </label>
+              <input
+                type="text"
+                value={postalCode}
+                onChange={(e) => setPostalCode(e.target.value)}
+                placeholder="Ex: 14200"
+                autoComplete="postal-code"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            {/* Téléphone */}
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 mb-1 block">
+                Téléphone *
+              </label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Ex: 77 123 45 67"
+                autoComplete="tel"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
             {/* Coupon */}
             <div className="mb-4">
               <label className="text-sm font-medium text-gray-700 mb-1 block">
-                Code coupon (optionnel)
+                Code coupon
               </label>
               <input
                 type="text"
                 value={coupon}
                 onChange={(e) => setCoupon(e.target.value)}
                 placeholder="Ex: PROMO10"
+                autoComplete="off"
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
@@ -205,7 +301,7 @@ export default function CartPage() {
             <button
               onClick={placeOrder}
               disabled={ordering}
-              className="w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50"
+              className="w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 disabled:opacity-50"
             >
               {ordering ? "Commande en cours..." : "Passer la commande"}
             </button>

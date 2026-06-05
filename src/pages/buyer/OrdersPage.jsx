@@ -8,6 +8,7 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedOrder, setExpandedOrder] = useState(null);
+  const [orderDetails, setOrderDetails] = useState({});
 
   useEffect(() => {
     fetchOrders();
@@ -17,7 +18,7 @@ export default function OrdersPage() {
     try {
       const res = await api.get("/orders/my-orders");
       setOrders(res.data.data || res.data || []);
-    } catch {
+    } catch (err) {
       toast.error("Erreur lors du chargement des commandes");
     } finally {
       setLoading(false);
@@ -44,6 +45,26 @@ export default function OrdersPage() {
       cancelled: "Annulée",
     };
     return labels[status] || status;
+  };
+
+  const handleToggleOrder = async (orderId) => {
+    if (expandedOrder === orderId) {
+      setExpandedOrder(null);
+    } else {
+      setExpandedOrder(orderId);
+      // Charger les détails complets si disponibles
+      if (!orderDetails[orderId]) {
+        try {
+          const res = await api.get(`/orders/${orderId}`);
+          setOrderDetails(prev => ({
+            ...prev,
+            [orderId]: res.data.data || res.data
+          }));
+        } catch (err) {
+          // Silently handle error - display available data
+        }
+      }
+    }
   };
 
   if (loading) return (
@@ -75,7 +96,7 @@ export default function OrdersPage() {
               {/* Header commande */}
               <div
                 className="p-5 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
+                onClick={() => handleToggleOrder(order.id)}
               >
                 <div className="flex items-center gap-4">
                   <Package size={20} className="text-indigo-500" />
@@ -107,45 +128,118 @@ export default function OrdersPage() {
 
               {/* Détail commande (expandable) */}
               {expandedOrder === order.id && (
-                <div className="border-t border-gray-100 p-5">
-                  <div className="space-y-3">
-                    {order.items?.map((item) => (
-                      <div key={item.id} className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          {item.product?.images?.[0] ? (
-                            <img
-                              src={item.product.images[0]}
-                              alt={item.product.title}
-                              className="w-full h-full object-cover rounded-lg"
-                            />
-                          ) : (
-                            <span className="text-xl">📦</span>
-                          )}
+                <div className="border-t border-gray-100 p-5 bg-gray-50">
+                  {(() => {
+                    const displayOrder = orderDetails[order.id] || order;
+                    return (
+                      <>
+                        {/* Articles */}
+                        <div className="mb-6">
+                          <h3 className="font-semibold text-gray-900 mb-3">Articles commandés</h3>
+                          <div className="space-y-3">
+                            {displayOrder.items?.length > 0 ? (
+                              displayOrder.items.map((item) => (
+                                <div key={item.id} className="flex items-center gap-3 bg-white p-3 rounded-lg">
+                                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    {item.product?.images?.[0] ? (
+                                      <img
+                                        src={item.product.images[0]}
+                                        alt={item.product.title}
+                                        className="w-full h-full object-cover rounded-lg"
+                                      />
+                                    ) : (
+                                      <span className="text-xl">📦</span>
+                                    )}
+                                  </div>
+                                  <div className="flex-1">
+                                    <Link
+                                      to={`/products/${item.product?.id}`}
+                                      className="text-sm font-medium text-gray-900 hover:text-indigo-600"
+                                    >
+                                      {item.product?.title}
+                                    </Link>
+                                    <p className="text-xs text-gray-400">Quantité : {item.quantity}</p>
+                                  </div>
+                                  <p className="text-sm font-bold text-gray-900">
+                                    {Number(item.unit_price * item.quantity || item.price * item.quantity || 0).toLocaleString()} FCFA
+                                  </p>
+                                </div>
+                              ))
+                            ) : (
+                              <p className="text-sm text-gray-500 bg-white p-3 rounded-lg">
+                                {displayOrder.item_count ? `${displayOrder.item_count} article(s) dans la commande` : 'Aucun article'}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <Link
-                            to={`/products/${item.product?.id}`}
-                            className="text-sm font-medium text-gray-900 hover:text-indigo-600"
-                          >
-                            {item.product?.title}
-                          </Link>
-                          <p className="text-xs text-gray-400">Quantité : {item.quantity}</p>
-                        </div>
-                        <p className="text-sm font-bold text-gray-900">
-                          {Number(item.price * item.quantity).toLocaleString()} FCFA
-                        </p>
-                      </div>
-                    ))}
-                  </div>
 
-                  {/* Infos supplémentaires */}
-                  {order.coupon_code && (
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <p className="text-sm text-green-600">
-                        🎟️ Coupon appliqué : <span className="font-medium">{order.coupon_code}</span>
-                      </p>
-                    </div>
-                  )}
+                        {/* Adresse de livraison */}
+                        <div className="mb-6 pb-6 border-b border-gray-200">
+                          <h3 className="font-semibold text-gray-900 mb-3">Adresse de livraison</h3>
+                          <div className="bg-white p-3 rounded-lg">
+                            {displayOrder.shipping_address ? (
+                              <>
+                                <p className="text-sm text-gray-900 font-medium">{displayOrder.customer_name}</p>
+                                <p className="text-sm text-gray-900">{displayOrder.shipping_address}</p>
+                                <p className="text-sm text-gray-600">{displayOrder.shipping_city} {displayOrder.shipping_postal_code}</p>
+                                {displayOrder.shipping_phone && (
+                                  <p className="text-sm text-gray-600 mt-2">📞 {displayOrder.shipping_phone}</p>
+                                )}
+                              </>
+                            ) : (
+                              <p className="text-sm text-gray-500">Adresse non disponible</p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Résumé financier */}
+                        <div className="mb-6 pb-6 border-b border-gray-200">
+                          <h3 className="font-semibold text-gray-900 mb-3">Résumé</h3>
+                          <div className="space-y-2 bg-white p-3 rounded-lg">
+                            {displayOrder.subtotal && (
+                              <div className="flex justify-between text-sm">
+                                <span className="text-gray-600">Sous-total :</span>
+                                <span className="text-gray-900">{Number(displayOrder.subtotal).toLocaleString()} FCFA</span>
+                              </div>
+                            )}
+                            {displayOrder.shipping_cost && (
+                              <div className="flex justify-between text-sm">
+                                <span className="text-gray-600">Frais de livraison :</span>
+                                <span className="text-gray-900">{Number(displayOrder.shipping_cost).toLocaleString()} FCFA</span>
+                              </div>
+                            )}
+                            {displayOrder.discount && (
+                              <div className="flex justify-between text-sm text-green-600">
+                                <span>Réduction :</span>
+                                <span>-{Number(displayOrder.discount).toLocaleString()} FCFA</span>
+                              </div>
+                            )}
+                            <div className="flex justify-between font-bold text-sm border-t pt-2">
+                              <span>Total :</span>
+                              <span className="text-indigo-600">{Number(displayOrder.total_amount).toLocaleString()} FCFA</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Coupon */}
+                        {displayOrder.coupon_code && (
+                          <div className="mb-6">
+                            <p className="text-sm text-green-600">
+                              🎟️ Coupon appliqué : <span className="font-medium">{displayOrder.coupon_code}</span>
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Infos supplémentaires */}
+                        <div className="text-xs text-gray-500">
+                          <p>Numéro de commande : {displayOrder.order_number || displayOrder.id}</p>
+                          <p>Passée le : {new Date(displayOrder.created_at).toLocaleDateString("fr-FR", {
+                            day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit"
+                          })}</p>
+                        </div>
+                      </>
+                    );
+                  })()}
                 </div>
               )}
             </div>
