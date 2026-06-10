@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { CartContext } from "../../contexts/CartContext";
-import { ShoppingCart, Search, Menu, X } from "lucide-react";
+import { ShoppingCart, Search, Heart, Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -93,16 +93,28 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           {user ? (
             <>
-              {/* Icône panier avec compteur */}
+              {/* Icônes buyer */}
               {user.role === "buyer" && (
-                <NavLink to="/cart" className="relative p-2 text-gray-600 hover:text-indigo-600">
-                  <ShoppingCart size={22} />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                      {cartCount}
-                    </span>
-                  )}
-                </NavLink>
+                <div className="flex items-center gap-2">
+                  {/* Favoris */}
+                  <NavLink
+                    to="/favorites"
+                    className="relative p-2 text-gray-600 hover:text-red-500 transition-colors"
+                    title="Mes favoris"
+                  >
+                    <Heart size={22} />
+                  </NavLink>
+
+                  {/* Panier */}
+                  <NavLink to="/cart" className="relative p-2 text-gray-600 hover:text-indigo-600">
+                    <ShoppingCart size={22} />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                        {cartCount}
+                      </span>
+                    )}
+                  </NavLink>
+                </div>
               )}
 
               {/* Menu Desktop */}
@@ -114,12 +126,20 @@ export default function Navbar() {
                   Profil
                 </NavLink>
                 {user.role === "buyer" && (
-                  <NavLink
-                    to="/orders"
-                    className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
-                  >
-                    Mes commandes
-                  </NavLink>
+                  <>
+                    <NavLink
+                      to="/orders"
+                      className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+                    >
+                      Mes commandes
+                    </NavLink>
+                    <NavLink
+                      to="/messages"
+                      className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+                    >
+                      Messages
+                    </NavLink>
+                  </>
                 )}
                 <button
                   onClick={logout}

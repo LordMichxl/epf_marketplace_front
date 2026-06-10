@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { getProduct, getProductReviews } from "../services/productService";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { getProduct, getProductReviews, createProductReview } from "../services/productService";
 import { useAuth } from "../hooks/useAuth";
 import { CartContext } from "../contexts/CartContext";
-import { ShoppingCart, Heart, ArrowLeft } from "lucide-react";
+import { ShoppingCart, Heart, ArrowLeft, Star } from "lucide-react";
 import toast from "react-hot-toast";
 import api from "../services/api";
 
@@ -17,6 +17,12 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
+  
+  // État du formulaire de notation
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
+  const [submitingReview, setSubmitingReview] = useState(false);
+  const [userHasReviewed, setUserHasReviewed] = useState(false);
 
   useEffect(() => {
     fetchProduct();
@@ -39,6 +45,12 @@ export default function ProductDetailPage() {
     try {
       const res = await getProductReviews(id);
       setReviews(res.data.data || []);
+      
+      // Vérifier si l'utilisateur a déjà commenté
+      if (user) {
+        const hasReviewed = res.data.data?.some(r => r.user?.id === user.id);
+        setUserHasReviewed(hasReviewed || false);
+      }
     } catch {}
   };
 
@@ -70,6 +82,42 @@ export default function ProductDetailPage() {
       toast.success("Ajouté aux favoris !");
     } catch {
       toast.error("Erreur");
+    }
+  };
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    
+    if (!user) {
+      toast.error("Connectez-vous pour laisser un avis");
+      navigate("/login");
+      return;
+    }
+
+    if (!comment.trim()) {
+      toast.error("Veuillez écrire un commentaire");
+      return;
+    }
+
+    setSubmitingReview(true);
+    try {
+      await createProductReview(id, {
+        rating: parseInt(rating),
+        comment: comment.trim(),
+      });
+      
+      toast.success("Avis publié avec succès !");
+      setRating(5);
+      setComment("");
+      setUserHasReviewed(true);
+      
+      // Recharger les avis
+      fetchReviews();
+    } catch (err) {
+      const msg = err.response?.data?.message || "Erreur lors de la publication de l'avis";
+      toast.error(msg);
+    } finally {
+      setSubmitingReview(false);
     }
   };
 
@@ -121,7 +169,17 @@ export default function ProductDetailPage() {
               {product.title}
             </h1>
             <p className="text-sm text-gray-400 mt-1">
-              Vendu par {product.seller && product.seller.name}
+              Vendu par{" "}
+              {product.seller && product.seller.id ? (
+                <Link
+                  to={`/sellers/${product.seller.id}`}
+                  className="text-indigo-600 hover:text-indigo-700 font-medium underline"
+                >
+                  {product.seller.name}
+                </Link>
+              ) : (
+                product.seller?.name || "Vendeur inconnu"
+              )}
             </p>
 
             {/* Prix */}
@@ -195,26 +253,96 @@ export default function ProductDetailPage() {
         </div>
 
         {/* Avis */}
-        {reviews.length > 0 && (
-          <div className="border-t border-gray-100 p-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
-              Avis clients ({reviews.length})
-            </h2>
+        <div className="border-t border-gray-100 p-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">
+            Avis clients {reviews.length > 0 && `(${reviews.length})`}
+          </h2>
+
+          {/* Formulaire de notation */}
+          {user && !userHasReviewed && (
+            <form
+              onSubmit={handleSubmitReview}
+              className="bg-indigo-50 rounded-xl p-6 mb-8"
+            >
+              <h3 className="font-semibold text-gray-900 mb-4">Laisser un avis</h3>
+              
+              <div className="space-y-4">
+                {/* Notation */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Notation
+                  </label>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        className="text-3xl transition-transform hover:scale-110"
+                      >
+                        {star <= rating ? (
+                          <span className="text-yellow-400">⭐</span>
+                        ) : (
+                          <span className="text-gray-300">☆</span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Commentaire */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Commentaire
+                  </label>
+                  <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Partagez votre avis sur ce produit..."
+                    rows="4"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:border-indigo-500 focus:ring-indigo-500 outline-none resize-none"
+                  />
+                </div>
+
+                {/* Bouton */}
+                <button
+                  type="submit"
+                  disabled={submitingReview}
+                  className="w-full bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                >
+                  {submitingReview ? "Publication..." : "Publier l'avis"}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Avis existants */}
+          {reviews.length > 0 ? (
             <div className="space-y-4">
               {reviews.map((review) => (
                 <div key={review.id} className="bg-gray-50 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="font-medium text-gray-900">
-                      {review.user && review.user.name}
-                    </p>
-                    <span className="text-yellow-500 text-sm">{"⭐".repeat(review.rating)}</span>
+                    <div>
+                      <p className="font-medium text-gray-900">
+                        {review.user && review.user.name}
+                      </p>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {review.created_at && new Date(review.created_at).toLocaleDateString("fr-FR")}
+                      </p>
+                    </div>
+                    <span className="text-yellow-500">{"⭐".repeat(review.rating)}</span>
                   </div>
                   <p className="text-sm text-gray-600">{review.comment}</p>
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <p>Aucun avis pour le moment</p>
+              {user && <p className="text-sm mt-2">Soyez le premier à commenter !</p>}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
