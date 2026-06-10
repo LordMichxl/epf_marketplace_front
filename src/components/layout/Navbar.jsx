@@ -31,14 +31,12 @@ export default function Navbar() {
     <nav className="max-w-full bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
 
-        {/* Logo */}
         <NavLink to="/" className="text-xl font-bold text-indigo-600 flex-shrink-0">
           <h1 className="text-lg sm:text-2xl font-semibold text-black">
             EPF <span className="text-indigo-500">Market</span>
           </h1>
         </NavLink>
 
-        {/* Liens du milieu - Desktop */}
         <div className="hidden md:flex items-center gap-6">
           <NavLink to="/products" className="text-gray-600 hover:text-indigo-600 transition-colors text-sm">
             Produits
@@ -74,7 +72,6 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Barre de recherche - Desktop */}
         <form
           onSubmit={handleSearch}
           className="hidden md:flex items-center border border-gray-200 rounded-lg overflow-hidden"
@@ -93,7 +90,6 @@ export default function Navbar() {
           </button>
         </form>
 
-        {/* Partie droite */}
         <div className="flex items-center gap-3">
           {user ? (
             <>
@@ -154,7 +150,7 @@ export default function Navbar() {
                 S'inscrire
               </NavLink>
 
-              {/* Menu Mobile - Hamburger */}
+              {/* Menu pour le Mobile */}
               <button
                 onClick={toggleMobileMenu}
                 className="md:hidden p-2 text-gray-600 hover:text-indigo-600"
