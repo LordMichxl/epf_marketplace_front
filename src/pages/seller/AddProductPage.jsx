@@ -52,23 +52,21 @@ export default function AddProductPage() {
     try {
       const formData = new FormData()
 
-      formData.append('title',       data.title)
+      formData.append('title',data.title)
       formData.append('description', data.description)
-      formData.append('price',       data.price)
-      formData.append('quantity',    data.quantity || 1)
+      formData.append('price', data.price)
+      formData.append('quantity', data.quantity || 1)
       formData.append('category_id', data.category_id)
-      formData.append('status',      data.status)
+      formData.append('status', data.status)
 
       if (data.sale_price) {
-        formData.append('sale_price',     data.sale_price)
+        formData.append('sale_price', data.sale_price)
         formData.append('sale_starts_at', data.sale_starts_at || '')
-        formData.append('sale_ends_at',   data.sale_ends_at   || '')
+        formData.append('sale_ends_at', data.sale_ends_at || '')
       }
 
-      // Image principale — obligatoire
       formData.append('image', mainFile)
 
-      // Galerie — optionnelle
       galleryFiles.forEach(file => {
         formData.append('images[]', file)
       })

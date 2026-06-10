@@ -1,13 +1,14 @@
-import { useContext, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { CartContext } from "../../contexts/CartContext";
-import { ShoppingCart, Search, Heart } from "lucide-react";
+import { ShoppingCart, Search, Heart, Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const { cartCount, fetchCart } = useContext(CartContext);
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (user?.role === "buyer") {
@@ -19,45 +20,58 @@ export default function Navbar() {
     e.preventDefault();
     const q = e.target.q.value.trim();
     if (q) navigate(`/search?q=${q}`);
+    setMobileMenuOpen(false);
+  };
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
   };
 
   return (
     <nav className="max-w-full bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
 
-        {/* Logo */}
-        <NavLink to="/" className="text-xl font-bold text-indigo-600">
-          <h1 className="text-2xl font-semibold text-black">
+        <NavLink to="/" className="text-xl font-bold text-indigo-600 flex-shrink-0">
+          <h1 className="text-lg sm:text-2xl font-semibold text-black">
             EPF <span className="text-indigo-500">Market</span>
           </h1>
         </NavLink>
 
-        {/* Liens du milieu */}
         <div className="hidden md:flex items-center gap-6">
-          <NavLink to="/products" className="text-gray-600 hover:text-indigo-600 transition-colors">
+          <NavLink to="/products" className="text-gray-600 hover:text-indigo-600 transition-colors text-sm">
             Produits
           </NavLink>
           {user?.role === "seller" && (
             <>
-              <NavLink to="/seller/dashboard" className="text-gray-600 hover:text-indigo-600">
-                Dashboard Vendeur
+              <NavLink to="/seller/dashboard" className="text-gray-600 hover:text-indigo-600 text-sm">
+                Dashboard
               </NavLink>
-              <NavLink to="/seller/products" className="text-gray-600 hover:text-indigo-600">
+              <NavLink to="/seller/products" className="text-gray-600 hover:text-indigo-600 text-sm">
                 Mes produits
               </NavLink>
-              <NavLink to="/seller/orders" className="text-gray-600 hover:text-indigo-600">
+              <NavLink to="/seller/orders" className="text-gray-600 hover:text-indigo-600 text-sm">
                 Mes commandes
               </NavLink>
             </>
           )}
           {user?.role === "admin" && (
-            <NavLink to="/admin" className="text-gray-600 hover:text-indigo-600">
-              Admin
+              <>
+            <NavLink to="/admin/dashboard" className="text-gray-600 hover:text-indigo-600 text-sm">
+              Dashboard
             </NavLink>
+            <NavLink to="/admin/users" className="text-gray-600 hover:text-indigo-600 text-sm">
+              Gestion Utilisateurs
+            </NavLink>
+            <NavLink to="/admin/products" className="text-gray-600 hover:text-indigo-600 text-sm">
+              Gestion Produits
+            </NavLink>
+            <NavLink to="/admin/coupons" className="text-gray-600 hover:text-indigo-600 text-sm">
+              Coupons
+            </NavLink>
+            </>
           )}
         </div>
 
-        {/* Barre de recherche */}
         <form
           onSubmit={handleSearch}
           className="hidden md:flex items-center border border-gray-200 rounded-lg overflow-hidden"
@@ -76,7 +90,6 @@ export default function Navbar() {
           </button>
         </form>
 
-        {/* Partie droite */}
         <div className="flex items-center gap-3">
           {user ? (
             <>
@@ -104,7 +117,8 @@ export default function Navbar() {
                 </div>
               )}
 
-              <div className="flex items-center space-x-4">
+              {/* Menu Desktop */}
+              <div className="hidden md:flex items-center space-x-4">
                 <NavLink
                   to="/profile"
                   className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
@@ -134,22 +148,178 @@ export default function Navbar() {
                   Déconnexion
                 </button>
               </div>
+
+              {/* Menu Mobile - Hamburger */}
+              <button
+                onClick={toggleMobileMenu}
+                className="md:hidden p-2 text-gray-600 hover:text-indigo-600"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
             </>
           ) : (
             <>
-              <NavLink to="/login" className="text-sm text-gray-600 hover:text-indigo-600">
+              {/* Menu Desktop sans connexion */}
+              <NavLink to="/login" className="hidden md:inline-block text-sm text-gray-600 hover:text-indigo-600">
                 Connexion
               </NavLink>
               <NavLink
                 to="/register"
-                className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+                className="hidden md:inline-block text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+              >
+                S'inscrire
+              </NavLink>
+
+              {/* Menu pour le Mobile */}
+              <button
+                onClick={toggleMobileMenu}
+                className="md:hidden p-2 text-gray-600 hover:text-indigo-600"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Menu Mobile */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-t border-gray-200 px-4 py-4 space-y-4">
+          {/* Barre de recherche Mobile */}
+          <form
+            onSubmit={handleSearch}
+            className="flex items-center border border-gray-200 rounded-lg overflow-hidden"
+          >
+            <input
+              name="q"
+              type="text"
+              placeholder="Rechercher..."
+              className="px-3 py-2 text-sm outline-none flex-1"
+            />
+            <button
+              type="submit"
+              className="px-3 py-2 bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+            >
+              <Search size={16} />
+            </button>
+          </form>
+
+          {/* Liens Mobiles */}
+          <NavLink
+            to="/products"
+            className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Produits
+          </NavLink>
+
+          {user?.role === "seller" && (
+            <>
+              <NavLink
+                to="/seller/dashboard"
+                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Dashboard Vendeur
+              </NavLink>
+              <NavLink
+                to="/seller/products"
+                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Mes produits
+              </NavLink>
+              <NavLink
+                to="/seller/orders"
+                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Mes commandes
+              </NavLink>
+            </>
+          )}
+
+          {user?.role === "admin" && (
+            <>
+              <NavLink
+                to="/admin/dashboard"
+                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Dashboard Admin
+              </NavLink>
+              <NavLink
+                to="/admin/users"
+                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Gestion Utilisateurs
+              </NavLink>
+              <NavLink
+                to="/admin/products"
+                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Gestion Produits
+              </NavLink>
+              <NavLink
+                to="/admin/coupons"
+                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Coupons
+              </NavLink>
+            </>
+          )}
+
+          {user ? (
+            <>
+              <NavLink
+                to="/profile"
+                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Profil
+              </NavLink>
+              {user.role === "buyer" && (
+                <NavLink
+                  to="/orders"
+                  className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Mes commandes
+                </NavLink>
+              )}
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-500 transition-colors mt-2"
+              >
+                Déconnexion
+              </button>
+            </>
+          ) : (
+            <>
+              <NavLink
+                to="/login"
+                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Connexion
+              </NavLink>
+              <NavLink
+                to="/register"
+                className="block w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-center font-medium"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 S'inscrire
               </NavLink>
             </>
           )}
         </div>
-      </div>
+      )}
     </nav>
   );
 }

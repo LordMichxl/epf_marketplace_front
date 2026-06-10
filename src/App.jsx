@@ -18,6 +18,12 @@ import CartPage from "./pages/buyer/CartPage";
 import OrdersPage from "./pages/buyer/OrdersPage";
 import FavoritesPage from "./pages/buyer/FavoritesPage";
 import MessagesPage from "./pages/buyer/MessagesPage";
+import AdminDashboard from './pages/admin/AdminDashboard';
+import UsersPage from "./pages/admin/UsersPage";
+import AdminProductsPage from './pages/admin/AdminProductsPage';
+import CouponsPage from './pages/admin/CouponsPage';
+import AddCouponPage from './pages/admin/AddCouponPage';
+import EditCouponPage from './pages/admin/EditCouponPage';
 
 import DashboardPage from "./pages/seller/DashboardPage";
 import MyProductsPage from "./pages/seller/MyProductsPage";
@@ -60,7 +66,16 @@ export default function App() {
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
       </Route>
+      {/* Routes protégées - Admin */}
+      <Route element= {<ProtectedRoute role = "admin"/>}>
+      <Route path='/admin/dashboard' element= {<AdminDashboard />} />
+      <Route path='/admin/users' element= {<UsersPage />} />
+      <Route path='/admin/products' element= {<AdminProductsPage />} />
+      <Route path='/admin/coupons' element= {<CouponsPage />} />
+      <Route path='/admin/coupons/new' element= {<AddCouponPage />} />
+      <Route path='/admin/coupons/:id/edit' element= {<EditCouponPage />} />
 
+      </Route>
       {/* Route par défaut */}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
