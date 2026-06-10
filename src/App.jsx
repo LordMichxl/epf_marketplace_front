@@ -25,13 +25,6 @@ import CouponsPage from './pages/admin/CouponsPage';
 import AddCouponPage from './pages/admin/AddCouponPage';
 import EditCouponPage from './pages/admin/EditCouponPage';
 
-import DashboardPage from "./pages/seller/DashboardPage";
-import MyProductsPage from "./pages/seller/MyProductsPage";
-import SellerOrdersPage from "./pages/seller/SellerOrdersPage";
-
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import UsersPage from "./pages/admin/UsersPage";
-import CouponsPage from "./pages/admin/CouponsPage";
 
 export default function App() {
   return (
@@ -81,5 +74,3 @@ export default function App() {
     </Routes>
   )
 }
-
-export default App

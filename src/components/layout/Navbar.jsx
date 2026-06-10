@@ -43,14 +43,17 @@ export default function Navbar() {
           </NavLink>
           {user?.role === "seller" && (
             <>
-              <NavLink to="/seller/dashboard" className="text-gray-600 hover:text-indigo-600 text-sm">
+              <NavLink to="/seller/dashboard" className="text-gray-600 hover:text-indigo-600 text-sm transition-colors">
                 Dashboard
               </NavLink>
-              <NavLink to="/seller/products" className="text-gray-600 hover:text-indigo-600 text-sm">
+              <NavLink to="/seller/products" className="text-gray-600 hover:text-indigo-600 text-sm transition-colors">
                 Mes produits
               </NavLink>
-              <NavLink to="/seller/orders" className="text-gray-600 hover:text-indigo-600 text-sm">
+              <NavLink to="/seller/orders" className="text-gray-600 hover:text-indigo-600 text-sm transition-colors">
                 Mes commandes
+              </NavLink>
+              <NavLink to="/messages" className="text-sm text-gray-600 hover:text-indigo-600 transition-colors">
+                Messages
               </NavLink>
             </>
           )}
@@ -222,6 +225,7 @@ export default function Navbar() {
               >
                 Dashboard Vendeur
               </NavLink>
+
               <NavLink
                 to="/seller/products"
                 className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
@@ -235,6 +239,13 @@ export default function Navbar() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Mes commandes
+              </NavLink>
+              <NavLink
+                  to="/messages"
+                  className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Messages
               </NavLink>
             </>
           )}
@@ -282,6 +293,7 @@ export default function Navbar() {
                 Profil
               </NavLink>
               {user.role === "buyer" && (
+                <>
                 <NavLink
                   to="/orders"
                   className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
@@ -289,6 +301,15 @@ export default function Navbar() {
                 >
                   Mes commandes
                 </NavLink>
+              
+                <NavLink
+                  to="/messages"
+                  className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Messages
+                </NavLink>
+              </>
               )}
               <button
                 onClick={() => {
