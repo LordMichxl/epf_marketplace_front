@@ -7,5 +7,5 @@ export const getSellerOrders = ( status = '', page = 1) =>{
 }
 
 export const updateOrderStatus = (orderId, status) => {
-    return api.put(`orders/${orderId}/status`, {status})
+    return api.put(`/orders/${orderId}/status`, { status })
 }
