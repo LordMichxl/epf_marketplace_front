@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { CartContext } from "../../contexts/CartContext";
-import { ShoppingCart, Search } from "lucide-react";
+import { ShoppingCart, Search, Heart } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -22,7 +22,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <nav className="max-w-full bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
 
         {/* Logo */}
@@ -38,9 +38,17 @@ export default function Navbar() {
             Produits
           </NavLink>
           {user?.role === "seller" && (
-            <NavLink to="/seller/dashboard" className="text-gray-600 hover:text-indigo-600">
-              Dashboard Vendeur
-            </NavLink>
+            <>
+              <NavLink to="/seller/dashboard" className="text-gray-600 hover:text-indigo-600">
+                Dashboard Vendeur
+              </NavLink>
+              <NavLink to="/seller/products" className="text-gray-600 hover:text-indigo-600">
+                Mes produits
+              </NavLink>
+              <NavLink to="/seller/orders" className="text-gray-600 hover:text-indigo-600">
+                Mes commandes
+              </NavLink>
+            </>
           )}
           {user?.role === "admin" && (
             <NavLink to="/admin" className="text-gray-600 hover:text-indigo-600">
@@ -72,16 +80,28 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           {user ? (
             <>
-              {/* Icône panier avec compteur */}
+              {/* Icônes buyer */}
               {user.role === "buyer" && (
-                <NavLink to="/cart" className="relative p-2 text-gray-600 hover:text-indigo-600">
-                  <ShoppingCart size={22} />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                      {cartCount}
-                    </span>
-                  )}
-                </NavLink>
+                <div className="flex items-center gap-2">
+                  {/* Favoris */}
+                  <NavLink
+                    to="/favorites"
+                    className="relative p-2 text-gray-600 hover:text-red-500 transition-colors"
+                    title="Mes favoris"
+                  >
+                    <Heart size={22} />
+                  </NavLink>
+
+                  {/* Panier */}
+                  <NavLink to="/cart" className="relative p-2 text-gray-600 hover:text-indigo-600">
+                    <ShoppingCart size={22} />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                        {cartCount}
+                      </span>
+                    )}
+                  </NavLink>
+                </div>
               )}
 
               <div className="flex items-center space-x-4">
@@ -92,12 +112,20 @@ export default function Navbar() {
                   Profil
                 </NavLink>
                 {user.role === "buyer" && (
-                  <NavLink
-                    to="/orders"
-                    className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
-                  >
-                    Mes commandes
-                  </NavLink>
+                  <>
+                    <NavLink
+                      to="/orders"
+                      className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+                    >
+                      Mes commandes
+                    </NavLink>
+                    <NavLink
+                      to="/messages"
+                      className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+                    >
+                      Messages
+                    </NavLink>
+                  </>
                 )}
                 <button
                   onClick={logout}
