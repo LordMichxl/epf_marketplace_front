@@ -19,7 +19,15 @@ import OrdersPage from "./pages/buyer/OrdersPage";
 import FavoritesPage from "./pages/buyer/FavoritesPage";
 import MessagesPage from "./pages/buyer/MessagesPage";
 
-function App() {
+import DashboardPage from "./pages/seller/DashboardPage";
+import MyProductsPage from "./pages/seller/MyProductsPage";
+import SellerOrdersPage from "./pages/seller/SellerOrdersPage";
+
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import UsersPage from "./pages/admin/UsersPage";
+import CouponsPage from "./pages/admin/CouponsPage";
+
+export default function App() {
   return (
     <Routes>
       {/* Routes publiques */}
@@ -34,6 +42,7 @@ function App() {
       {/* Routes protégées - Profil commun */}
       <Route element={<ProtectedRoute />}>
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/messages" element={<MessagesPage />} />
       </Route>
 
       {/* Routes protégées - Vendeur */}
@@ -50,7 +59,6 @@ function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
-        <Route path="/messages" element={<MessagesPage />} />
       </Route>
 
       {/* Route par défaut */}
