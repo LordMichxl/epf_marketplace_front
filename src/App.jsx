@@ -19,6 +19,13 @@ import OrdersPage from "./pages/buyer/OrdersPage";
 import FavoritesPage from "./pages/buyer/FavoritesPage";
 import MessagesPage from "./pages/buyer/MessagesPage";
 import AdminDashboard from './pages/admin/AdminDashboard';
+
+import DashboardPage from "./pages/seller/DashboardPage";
+import MyProductsPage from "./pages/seller/MyProductsPage";
+import SellerProfilePage from "./pages/SellerProfilePage";
+import SellerOrdersPage from "./pages/seller/SellerOrdersPage";
+
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import UsersPage from "./pages/admin/UsersPage";
 import AdminProductsPage from './pages/admin/AdminProductsPage';
 import CouponsPage from './pages/admin/CouponsPage';
@@ -52,6 +59,11 @@ export default function App() {
         <Route path="/seller/products/new" element={<AddProductPage />} />
         <Route path="/seller/products/:id/edit" element={<EditProductPage />} />
       </Route>
+              {/* Routes seller */}
+              <Route path="/seller/dashboard" element={<ProtectedRoute role="seller"><DashboardPage /></ProtectedRoute>} />
+              <Route path="/seller/products" element={<ProtectedRoute role="seller"><MyProductsPage /></ProtectedRoute>} />
+              <Route path="/seller/orders" element={<ProtectedRoute role="seller"><SellerOrdersPage /></ProtectedRoute>} />
+              <Route path="/sellers/:id" element={<SellerProfilePage />} />
 
       {/* Routes protégées - Acheteur */}
       <Route element={<ProtectedRoute role="buyer" />}>
