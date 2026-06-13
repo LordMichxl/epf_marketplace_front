@@ -170,16 +170,12 @@ export default function ProductDetailPage() {
             </h1>
             <p className="text-sm text-gray-400 mt-1">
               Vendu par{" "}
-              {product.seller && product.seller.id ? (
-                <Link
-                  to={`/sellers/${product.seller.id}`}
-                  className="text-indigo-600 hover:text-indigo-700 font-medium underline"
-                >
-                  {product.seller.name}
-                </Link>
-              ) : (
-                product.seller?.name || "Vendeur inconnu"
-              )}
+             <Link
+               to={`/sellers/${product.seller?.id}`}
+               className="text-indigo-600 hover:underline font-medium"
+      >
+               {product.seller?.name}
+             </Link>
             </p>
 
             {/* Prix */}
