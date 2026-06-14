@@ -138,7 +138,7 @@ export default function ProductDetailPage() {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-500 hover:text-indigo-600 mb-6 transition-colors"
+        className="flex items-center gap-2 text-gray-500 hover:text-indigo-800 mb-6 transition-colors"
       >
         <ArrowLeft size={18} />
         Retour au catalogue
@@ -162,7 +162,7 @@ export default function ProductDetailPage() {
 
           {/* Infos */}
           <div className="p-8">
-            <p className="text-sm text-indigo-600 font-medium">
+            <p className="text-sm text-indigo-800 font-medium">
               {product.category && product.category.name}
             </p>
             <h1 className="text-2xl font-bold text-gray-900 mt-1">
@@ -172,7 +172,7 @@ export default function ProductDetailPage() {
               Vendu par{" "}
              <Link
                to={`/sellers/${product.seller?.id}`}
-               className="text-indigo-600 hover:underline font-medium"
+               className="text-indigo-800 hover:underline font-medium"
       >
                {product.seller?.name}
              </Link>
@@ -180,7 +180,7 @@ export default function ProductDetailPage() {
 
             {/* Prix */}
             <div className="mt-6">
-              <span className="text-3xl font-bold text-indigo-600">
+              <span className="text-3xl font-bold text-indigo-800">
                 {Number(price).toLocaleString()} FCFA
               </span>
               {product.is_on_sale && (
@@ -213,14 +213,14 @@ export default function ProductDetailPage() {
                   <div className="flex items-center border border-gray-200 rounded-lg">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-3 py-1 text-gray-600 hover:text-indigo-600 text-lg"
+                      className="px-3 py-1 text-gray-600 hover:text-indigo-800 text-lg"
                     >
                       -
                     </button>
                     <span className="px-4 py-1 font-medium">{quantity}</span>
                     <button
                       onClick={() => setQuantity(Math.min(stock, quantity + 1))}
-                      className="px-3 py-1 text-gray-600 hover:text-indigo-600 text-lg"
+                      className="px-3 py-1 text-gray-600 hover:text-indigo-800 text-lg"
                     >
                       +
                     </button>
@@ -231,7 +231,7 @@ export default function ProductDetailPage() {
                   <button
                     onClick={handleAddToCart}
                     disabled={addingToCart}
-                    className="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="flex-1 bg-indigo-800 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     <ShoppingCart size={18} />
                     {addingToCart ? "Ajout..." : "Ajouter au panier"}
@@ -304,7 +304,7 @@ export default function ProductDetailPage() {
                 <button
                   type="submit"
                   disabled={submitingReview}
-                  className="w-full bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                  className="w-full bg-indigo-800 text-white py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50"
                 >
                   {submitingReview ? "Publication..." : "Publier l'avis"}
                 </button>

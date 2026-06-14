@@ -31,44 +31,44 @@ export default function Navbar() {
     <nav className="max-w-full bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
 
-        <NavLink to="/" className="text-xl font-bold text-indigo-600 flex-shrink-0">
+        <NavLink to="/" className="text-xl font-bold text-indigo-800 flex-shrink-0">
           <h1 className="text-lg sm:text-2xl font-semibold text-black">
-            EPF <span className="text-indigo-500">Market</span>
+            EPF <span className="text-indigo-800">Market</span>
           </h1>
         </NavLink>
 
         <div className="hidden md:flex items-center gap-6">
-          <NavLink to="/products" className="text-gray-600 hover:text-indigo-600 transition-colors text-sm">
+          <NavLink to="/products" className="text-gray-700 hover:text-indigo-800 transition-colors text-sm font-medium">
             Produits
           </NavLink>
           {user?.role === "seller" && (
             <>
-              <NavLink to="/seller/dashboard" className="text-gray-600 hover:text-indigo-600 text-sm transition-colors">
+              <NavLink to="/seller/dashboard" className="text-gray-700 hover:text-indigo-800 text-sm transition-colors font-medium">
                 Dashboard
               </NavLink>
-              <NavLink to="/seller/products" className="text-gray-600 hover:text-indigo-600 text-sm transition-colors">
+              <NavLink to="/seller/products" className="text-gray-700 hover:text-indigo-800 text-sm transition-colors font-medium ">
                 Mes produits
               </NavLink>
-              <NavLink to="/seller/orders" className="text-gray-600 hover:text-indigo-600 text-sm transition-colors">
+              <NavLink to="/seller/orders" className="text-gray-700 hover:text-indigo-800 text-sm transition-colors font-medium">
                 Mes commandes
               </NavLink>
-              <NavLink to="/messages" className="text-sm text-gray-600 hover:text-indigo-600 transition-colors">
+              <NavLink to="/messages" className="text-sm text-gray-700 hover:text-indigo-800 transition-colors font-medium">
                 Messages
               </NavLink>
             </>
           )}
           {user?.role === "admin" && (
               <>
-            <NavLink to="/admin/dashboard" className="text-gray-600 hover:text-indigo-600 text-sm">
+            <NavLink to="/admin/dashboard" className="text-gray-700 hover:text-indigo-800 text-sm font-medium">
               Dashboard
             </NavLink>
-            <NavLink to="/admin/users" className="text-gray-600 hover:text-indigo-600 text-sm">
+            <NavLink to="/admin/users" className="text-gray-700 hover:text-indigo-800 text-sm font-medium">
               Gestion Utilisateurs
             </NavLink>
-            <NavLink to="/admin/products" className="text-gray-600 hover:text-indigo-600 text-sm">
+            <NavLink to="/admin/products" className="text-gray-700 hover:text-indigo-800 text-sm font-medium">
               Gestion Produits
             </NavLink>
-            <NavLink to="/admin/coupons" className="text-gray-600 hover:text-indigo-600 text-sm">
+            <NavLink to="/admin/coupons" className="text-gray-700 hover:text-indigo-800 text-sm font-medium">
               Coupons
             </NavLink>
             </>
@@ -87,7 +87,7 @@ export default function Navbar() {
           />
           <button
             type="submit"
-            className="px-3 py-1.5 bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+            className="px-3 py-1.5 bg-indigo-700 text-white hover:bg-indigo-800 transition-colors"
           >
             <Search size={16} />
           </button>
@@ -109,7 +109,7 @@ export default function Navbar() {
                   </NavLink>
 
                   {/* Panier */}
-                  <NavLink to="/cart" className="relative p-2 text-gray-600 hover:text-indigo-600">
+                  <NavLink to="/cart" className="relative p-2 text-gray-600 hover:text-indigo-800">
                     <ShoppingCart size={22} />
                     {cartCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
@@ -124,7 +124,7 @@ export default function Navbar() {
               <div className="hidden md:flex items-center space-x-4">
                 <NavLink
                   to="/profile"
-                  className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+                  className="text-sm font-medium text-gray-700 hover:text-indigo-800 transition-colors"
                 >
                   Profil
                 </NavLink>
@@ -132,13 +132,13 @@ export default function Navbar() {
                   <>
                     <NavLink
                       to="/orders"
-                      className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+                      className="text-sm font-medium text-gray-700 hover:text-indigo-800 transition-colors"
                     >
                       Mes commandes
                     </NavLink>
                     <NavLink
                       to="/messages"
-                      className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+                      className="text-sm font-medium text-gray-700 hover:text-indigo-800 transition-colors"
                     >
                       Messages
                     </NavLink>
@@ -146,7 +146,7 @@ export default function Navbar() {
                 )}
                 <button
                   onClick={logout}
-                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-500 transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-700 rounded-md hover:bg-indigo-800 transition-colors"
                 >
                   Déconnexion
                 </button>
@@ -155,7 +155,7 @@ export default function Navbar() {
               {/* Menu Mobile - Hamburger */}
               <button
                 onClick={toggleMobileMenu}
-                className="md:hidden p-2 text-gray-600 hover:text-indigo-600"
+                className="md:hidden p-2 text-gray-600 hover:text-indigo-800"
               >
                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -163,12 +163,12 @@ export default function Navbar() {
           ) : (
             <>
               {/* Menu Desktop sans connexion */}
-              <NavLink to="/login" className="hidden md:inline-block text-sm text-gray-600 hover:text-indigo-600">
+              <NavLink to="/login" className="hidden md:inline-block text-sm text-gray-600 hover:text-indigo-800">
                 Connexion
               </NavLink>
               <NavLink
                 to="/register"
-                className="hidden md:inline-block text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+                className="hidden md:inline-block text-sm bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-800"
               >
                 S'inscrire
               </NavLink>
@@ -176,7 +176,7 @@ export default function Navbar() {
               {/* Menu pour le Mobile */}
               <button
                 onClick={toggleMobileMenu}
-                className="md:hidden p-2 text-gray-600 hover:text-indigo-600"
+                className="md:hidden p-2 text-gray-600 hover:text-indigo-800"
               >
                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -201,7 +201,7 @@ export default function Navbar() {
             />
             <button
               type="submit"
-              className="px-3 py-2 bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+              className="px-3 py-2 bg-indigo-700 text-white hover:bg-indigo-800 transition-colors"
             >
               <Search size={16} />
             </button>
@@ -210,7 +210,7 @@ export default function Navbar() {
           {/* Liens Mobiles */}
           <NavLink
             to="/products"
-            className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+            className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
             onClick={() => setMobileMenuOpen(false)}
           >
             Produits
@@ -220,7 +220,7 @@ export default function Navbar() {
             <>
               <NavLink
                 to="/seller/dashboard"
-                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Dashboard Vendeur
@@ -228,21 +228,21 @@ export default function Navbar() {
 
               <NavLink
                 to="/seller/products"
-                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Mes produits
               </NavLink>
               <NavLink
                 to="/seller/orders"
-                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Mes commandes
               </NavLink>
               <NavLink
                   to="/messages"
-                  className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                  className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Messages
@@ -254,28 +254,28 @@ export default function Navbar() {
             <>
               <NavLink
                 to="/admin/dashboard"
-                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Dashboard Admin
               </NavLink>
               <NavLink
                 to="/admin/users"
-                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Gestion Utilisateurs
               </NavLink>
               <NavLink
                 to="/admin/products"
-                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Gestion Produits
               </NavLink>
               <NavLink
                 to="/admin/coupons"
-                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Coupons
@@ -287,7 +287,7 @@ export default function Navbar() {
             <>
               <NavLink
                 to="/profile"
-                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Profil
@@ -296,7 +296,7 @@ export default function Navbar() {
                 <>
                 <NavLink
                   to="/orders"
-                  className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                  className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Mes commandes
@@ -304,7 +304,7 @@ export default function Navbar() {
               
                 <NavLink
                   to="/messages"
-                  className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                  className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Messages
@@ -316,7 +316,7 @@ export default function Navbar() {
                   logout();
                   setMobileMenuOpen(false);
                 }}
-                className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-500 transition-colors mt-2"
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-700 rounded-md hover:bg-indigo-800 transition-colors mt-2"
               >
                 Déconnexion
               </button>
@@ -325,14 +325,14 @@ export default function Navbar() {
             <>
               <NavLink
                 to="/login"
-                className="block text-gray-600 hover:text-indigo-600 py-2 font-medium"
+                className="block text-gray-600 hover:text-indigo-800 py-2 font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Connexion
               </NavLink>
               <NavLink
                 to="/register"
-                className="block w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-center font-medium"
+                className="block w-full bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-800 text-center font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 S'inscrire

@@ -84,7 +84,7 @@ export default function ProfilePage() {
         <div className="mb-6">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-medium text-sm"
+            className="inline-flex items-center gap-2 text-indigo-800 hover:text-indigo-700 font-medium text-sm"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -96,7 +96,7 @@ export default function ProfilePage() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
 
-            <div className="bg-gradient-to-r from-indigo-500 to-violet-500 h-24 relative">
+            <div className="bg-gradient-to-r from-indigo-800 to-red-600 h-24 relative">
 
               <div className="absolute -bottom-9 left-1/2 -translate-x-1/2">
 
@@ -249,7 +249,7 @@ export default function ProfilePage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-indigo-500 hover:bg-indigo-600
+                className="w-full bg-indigo-700 hover:bg-indigo-800
                            disabled:opacity-60 text-white font-semibold
                            py-3 rounded-xl transition text-sm"
               >

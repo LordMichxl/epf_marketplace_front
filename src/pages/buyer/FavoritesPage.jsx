@@ -62,7 +62,7 @@ export default function FavoritesPage() {
           <p className="text-gray-500 text-lg">Aucun favori pour l'instant</p>
           <Link
             to="/products"
-            className="mt-4 inline-block bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors"
+            className="mt-4 inline-block bg-indigo-700 text-white px-6 py-3 rounded-xl hover:bg-indigo-800 transition-colors"
           >
             Découvrir les produits
           </Link>
@@ -100,21 +100,21 @@ export default function FavoritesPage() {
 
                 {/* Infos */}
                 <div className="p-4">
-                  <p className="text-xs text-indigo-600 font-medium">{product.category?.name}</p>
+                  <p className="text-xs text-indigo-800 font-medium">{product.category?.name}</p>
                   <Link to={`/products/${product.id}`}>
-                    <h3 className="font-semibold text-gray-900 truncate hover:text-indigo-600 mt-1">
+                    <h3 className="font-semibold text-gray-900 truncate hover:text-indigo-800 mt-1">
                       {product.title}
                     </h3>
                   </Link>
                   <p className="text-xs text-gray-400 mt-1">{product.seller?.name}</p>
 
                   <div className="flex items-center justify-between mt-3">
-                    <span className="text-lg font-bold text-indigo-600">
+                    <span className="text-lg font-bold text-indigo-800">
                       {Number(price).toLocaleString()} FCFA
                     </span>
                     <button
                       onClick={() => handleAddToCart(product.id)}
-                      className="p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                      className="p-2 bg-indigo-700 text-white rounded-lg hover:bg-indigo-800 transition-colors"
                     >
                       <ShoppingCart size={16} />
                     </button>

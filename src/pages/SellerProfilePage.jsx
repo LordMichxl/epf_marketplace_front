@@ -1,174 +1,265 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import api from "../services/api";
-import toast from "react-hot-toast";
-import { Store, MapPin, Calendar, Star, ShoppingBag, ArrowLeft } from "lucide-react";
+import { useState, useEffect } from "react"
+import { useParams, Link } from "react-router-dom"
+import api from "../services/api"
+import { getProducts } from "../services/productService"
+import { useAuth } from "../hooks/useAuth"
+import toast from "react-hot-toast"
+import { MessageCircle, Package, X } from "lucide-react"
 
 export default function SellerProfilePage() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [seller, setSeller] = useState(null);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [avgRating, setAvgRating] = useState(0);
+  const { id } = useParams()
+  const { user } = useAuth()
+  const [seller, setSeller]   = useState(null)
+  const [products, setProducts] = useState([])
+  const [loading, setLoading]   = useState(true)
+  const [message, setMessage]   = useState("")
+  const [sending, setSending]   = useState(false)
+  const [activeForm, setActiveForm] = useState(null)
 
   useEffect(() => {
-    fetchSellerData();
-  }, [id]);
+    fetchSellerProfile()
+    fetchSellerProducts()
+  }, [id])
 
-  const fetchSellerData = async () => {
+  const fetchSellerProfile = async () => {
     try {
-      setLoading(true);
-      // Récupérer le profil du vendeur
-      const sellerRes = await api.get(`/sellers/${id}`);
-      setSeller(sellerRes.data.data || sellerRes.data);
-
-      // Récupérer ses produits
-      const productsRes = await api.get(`/sellers/${id}/products`);
-      const productsList = productsRes.data.data || productsRes.data || [];
-      setProducts(productsList);
-
-      // Calculer la moyenne des notes
-      if (productsList.length > 0) {
-        const totalRating = productsList.reduce((sum, prod) => sum + (prod.average_rating || 0), 0);
-        setAvgRating((totalRating / productsList.length).toFixed(1));
-      }
-    } catch (err) {
-      toast.error("Vendeur non trouvé");
-      navigate("/products");
-    } finally {
-      setLoading(false);
+      const res = await api.get(`/sellers/${id}`)
+      setSeller(res.data.data || res.data)
+    } catch {
+      toast.error("Vendeur introuvable")
     }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
-      </div>
-    );
   }
 
-  if (!seller) return null;
+  const fetchSellerProducts = async () => {
+    try {
+      const res = await getProducts({ seller_id: id })
+      setProducts(res.data.data || [])
+    } catch {}
+    finally {
+      setLoading(false)
+    }
+  }
+
+  const openSellerForm = () => {
+    setMessage("")
+    setActiveForm({
+      recipientId:   Number(id), 
+      productId:     null,
+      productTitle:  null,
+      label: `Envoyer un message à ${seller?.name}`,
+    })
+  }
+
+  const openSellerProductForm = (e, product) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    setMessage("")
+    setActiveForm({
+      recipientId:  product.seller?.id,
+      productId:    product.id,
+      productTitle: product.title,
+      label:`Message à propos de "${product.title}"`,
+    })
+  }
+
+  const closeForm = () => {
+    setActiveForm(null)
+    setMessage("")
+  }
+
+  const sendMessage = async (e) => {
+    e.preventDefault()
+    if (!message.trim() || !activeForm) return
+
+    setSending(true)
+    try {
+      await api.post("/messages", {
+        recipient_id: activeForm.recipientId,
+        content:      message,
+        ...(activeForm.productId && {
+          product_id: activeForm.productId
+        }),
+      })
+      toast.success("Message envoyé !")
+      closeForm()
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Erreur lors de l'envoi")
+    } finally {
+      setSending(false)
+    }
+  }
+
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen">
+      <div className="animate-spin rounded-full h-10 w-10
+                      border-b-2 border-indigo-500"/>
+    </div>
+  )
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-500 hover:text-indigo-600 mb-6 transition-colors"
-      >
-        <ArrowLeft size={18} />
-        Retour
-      </button>
+    <div className="max-w-5xl mx-auto px-4 py-8">
 
-      {/* Profil vendeur */}
-      <div className="bg-white rounded-2xl shadow-sm p-8 mb-8">
-        <div className="flex items-center gap-6 mb-6">
-          {/* Avatar */}
-          <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold text-2xl">
-            {seller.name?.charAt(0).toUpperCase() || "V"}
+      <div className="bg-white rounded-2xl shadow-sm p-6 mb-8">
+        <div className="flex items-center gap-6">
+          {seller.profile_image? (
+            <img
+                src={seller.profile_image}
+                 alt="Avatar vendeur"
+                  className="w-24 h-24 rounded-full border-3 border-white
+                                   object-cover shadow"
+                />
+          ):(
+            <div className="w-20 h-20 bg-indigo-100 rounded-full flex
+                          items-center justify-center text-3xl font-bold
+                          text-indigo-600 shrink-0">
+            {seller?.name?.charAt(0).toUpperCase()}
           </div>
+            )}
 
-          {/* Infos */}
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900">{seller.name}</h1>
-            <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-600">
-              {seller.city && (
-                <div className="flex items-center gap-1">
-                  <MapPin size={16} className="text-indigo-600" />
-                  {seller.city}
-                </div>
-              )}
-              {seller.created_at && (
-                <div className="flex items-center gap-1">
-                  <Calendar size={16} className="text-indigo-600" />
-                  Vendeur depuis {new Date(seller.created_at).getFullYear()}
-                </div>
-              )}
-              {avgRating > 0 && (
-                <div className="flex items-center gap-1">
-                  <Star size={16} className="text-yellow-500 fill-yellow-500" />
-                  {avgRating} / 5
-                </div>
-              )}
-            </div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {seller?.name}
+            </h1>
+            <p className="text-gray-500 mt-1">
+              {seller?.city || "Vendeur EPF Market"}
+            </p>
+            {seller?.bio && (
+              <p className="text-gray-600 mt-2 text-sm">{seller.bio}</p>
+            )}
           </div>
 
-          {/* Stats */}
-          <div className="bg-indigo-50 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-indigo-600">{products.length}</div>
-            <div className="text-sm text-gray-600 flex items-center gap-1 mt-1">
-              <ShoppingBag size={14} /> Produits
-            </div>
-          </div>
+          {user && user.role === "buyer" && (
+            <button
+              onClick={openSellerForm}
+              className="flex items-center gap-2 bg-indigo-600 text-white
+                         px-4 py-2 rounded-xl hover:bg-indigo-700 transition"
+            >
+              <MessageCircle size={18}/>
+              Contacter
+            </button>
+          )}
         </div>
 
-        {/* Description si disponible */}
-        {seller.description && (
-          <p className="text-gray-600 text-sm leading-relaxed">{seller.description}</p>
+        {activeForm && (
+          <div className="mt-6 border-t border-gray-100 pt-6">
+            <div className="flex items-center justify-between mb-3">
+              <label className="text-sm font-medium text-gray-700">
+                {activeForm.label}
+              </label>
+              <button
+                onClick={closeForm}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X size={16}/>
+              </button>
+            </div>
+
+            {activeForm.productTitle && (
+              <div className="flex items-center gap-2 bg-indigo-50
+                              text-indigo-700 text-xs font-medium px-3
+                              py-1.5 rounded-lg mb-3 w-fit">
+                <Package size={12}/>
+                {activeForm.productTitle}
+              </div>
+            )}
+
+            <form onSubmit={sendMessage}>
+              <textarea
+                value={message}
+                onChange={e => setMessage(e.target.value)}
+                placeholder="Écrivez votre message..."
+                rows={3}
+                className="w-full border border-gray-200 rounded-xl px-4
+                           py-3 text-sm focus:outline-none focus:ring-2
+                           focus:ring-indigo-500 resize-none"
+              />
+              <div className="flex gap-3 mt-3">
+                <button
+                  type="submit"
+                  disabled={sending || !message.trim()}
+                  className="bg-indigo-700 text-white px-6 py-2 rounded-xl
+                             hover:bg-indigo-800 disabled:opacity-50 text-sm"
+                >
+                  {sending ? "Envoi..." : "Envoyer"}
+                </button>
+                <button
+                  type="button"
+                  onClick={closeForm}
+                  className="text-gray-500 hover:text-gray-700 text-sm
+                             px-4 py-2"
+                >
+                  Annuler
+                </button>
+              </div>
+            </form>
+          </div>
         )}
       </div>
 
-      {/* Produits du vendeur */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-          <Store size={24} className="text-indigo-600" />
-          Produits du vendeur
+      {/* ── Produits du vendeur ── */}
+      <div>
+        <h2 className="text-xl font-bold text-gray-900 mb-6
+                       flex items-center gap-2">
+          <Package size={20} className="text-indigo-800"/>
+          Produits de {seller?.name} ({products.length})
         </h2>
 
         {products.length === 0 ? (
-          <div className="bg-gray-50 rounded-2xl p-12 text-center">
-            <ShoppingBag size={48} className="mx-auto text-gray-300 mb-4" />
-            <p className="text-gray-500 text-lg">Aucun produit disponible</p>
+          <div className="text-center py-10 text-gray-400">
+            Aucun produit disponible
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((product) => {
-              const price = product.effective_price || product.price;
-              return (
-                <Link
-                  key={product.id}
-                  to={`/products/${product.id}`}
-                  className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-                >
-                  {/* Image */}
-                  <div className="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
-                    {product.images && product.images[0] ? (
-                      <img
-                        src={product.images[0]}
-                        alt={product.title}
-                        className="w-full h-full object-cover hover:scale-110 transition-transform"
-                      />
-                    ) : (
-                      <span className="text-5xl">📦</span>
-                    )}
-                  </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {products.map(product => (
+              <Link
+                key={product.id}
+                to={`/products/${product.id}`}
+                className="bg-white rounded-2xl shadow-sm hover:shadow-md
+                           transition-shadow overflow-hidden group"
+              >
+                <div className="h-48 bg-gray-100 flex items-center
+                                justify-center overflow-hidden">
+                  {product.image ? (
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="w-full h-full object-cover
+                                 group-hover:scale-105 transition-transform
+                                 duration-300"
+                    />
+                  ) : (
+                    <span className="text-5xl">📦</span>
+                  )}
+                </div>
 
-                  {/* Infos */}
-                  <div className="p-4">
-                    <p className="text-xs text-indigo-600 font-medium mb-1">
-                      {product.category?.name || "Produit"}
-                    </p>
-                    <h3 className="font-semibold text-gray-900 truncate mb-2">
-                      {product.title}
-                    </h3>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-indigo-600">
-                        {Number(price).toLocaleString()} FCFA
-                      </span>
-                      {product.average_rating > 0 && (
-                        <span className="text-xs text-yellow-500">
-                          ⭐ {product.average_rating}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+                <div className="p-4">
+                  <h3 className="font-semibold text-gray-900 truncate">
+                    {product.title}
+                  </h3>
+                  <p className="text-lg font-bold text-indigo-800 mt-1">
+                    {Number(product.effective_price || product.price)
+                      .toLocaleString('fr-FR')} FCFA
+                  </p>
+
+                  {user && user.role === "buyer" && (
+                    <button
+                      onClick={(e) => openSellerProductForm(e, product)}
+                      className="mt-3 w-full flex items-center justify-center
+                                 gap-2 border border-indigo-200 text-indigo-800
+                                 hover:bg-indigo-50 text-xs font-medium py-2
+                                 rounded-lg transition"
+                    >
+                      <MessageCircle size={14}/>
+                      Contacter le vendeur
+                    </button>
+                  )}
+                </div>
+              </Link>
+            ))}
           </div>
         )}
       </div>
     </div>
-  );
+  )
 }

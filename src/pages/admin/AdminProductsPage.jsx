@@ -108,7 +108,7 @@ export default function AdminProductsPage() {
                   {product.title}
                 </p>
                 <p className="text-xs text-slate-400">
-                  {Number(product.price).toLocaleString('fr-FR')} XOF
+                  {Number(product.price).toLocaleString('fr-FR')} FCFA
                   {product.seller && ` · par ${product.seller.name}`}
                 </p>
               </div>

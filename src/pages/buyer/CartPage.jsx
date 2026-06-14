@@ -126,7 +126,7 @@ export default function CartPage() {
           <p className="text-gray-500 text-lg">Votre panier est vide</p>
           <Link
             to="/products"
-            className="mt-4 inline-block bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors"
+            className="mt-4 inline-block bg-indigo-700 text-white px-6 py-3 rounded-xl hover:bg-indigo-800 transition-colors"
           >
             Découvrir les produits
           </Link>
@@ -154,22 +154,22 @@ export default function CartPage() {
 
                 {/* Infos */}
                 <div className="flex-1">
-                  <Link to={`/products/${item.product?.id}`} className="font-semibold text-gray-900 hover:text-indigo-600">
+                  <Link to={`/products/${item.product?.id}`} className="font-semibold text-gray-900 hover:text-indigo-800">
                     {item.product?.title}
                   </Link>
                   <p className="text-sm text-gray-400">{item.seller?.name}</p>
-                  <p className="text-indigo-600 font-bold mt-1">
+                  <p className="text-indigo-800 font-bold mt-1">
                     {Number(item.product?.effective_price || item.product?.price).toLocaleString()} FCFA
                   </p>
                 </div>
 
                 {/* Quantité */}
                 <div className="flex items-center border border-gray-200 rounded-lg">
-                  <button onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)} className="px-2 py-1 text-gray-600 hover:text-indigo-600">
+                  <button onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)} className="px-2 py-1 text-gray-600 hover:text-indigo-800">
                     <Minus size={16} />
                   </button>
                   <span className="px-3 py-1 font-medium">{item.quantity}</span>
-                  <button onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)} className="px-2 py-1 text-gray-600 hover:text-indigo-600">
+                  <button onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)} className="px-2 py-1 text-gray-600 hover:text-indigo-800">
                     <Plus size={16} />
                   </button>
                 </div>
@@ -204,7 +204,7 @@ export default function CartPage() {
             <div className="border-t border-gray-100 pt-4 mb-4">
               <div className="flex justify-between font-bold text-gray-900">
                 <span>Total</span>
-                <span className="text-indigo-600">{Number(total).toLocaleString()} FCFA</span>
+                <span className="text-indigo-800">{Number(total).toLocaleString()} FCFA</span>
               </div>
             </div>
 
@@ -301,7 +301,7 @@ export default function CartPage() {
             <button
               onClick={placeOrder}
               disabled={ordering}
-              className="w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 disabled:opacity-50"
+              className="w-full bg-indigo-700 text-white py-3 rounded-xl font-medium hover:bg-indigo-800 disabled:opacity-50"
             >
               {ordering ? "Commande en cours..." : "Passer la commande"}
             </button>

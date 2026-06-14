@@ -29,7 +29,7 @@ export default function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-indigo-600 to-purple-700 text-white py-20 px-4">
+      <section className="bg-gradient-to-br from-indigo-800 to-red-700 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold mb-4">Bienvenue sur EPF Market</h1>
           <p className="text-xl text-indigo-100 mb-8">
@@ -37,7 +37,7 @@ export default function HomePage() {
           </p>
           <Link
             to="/products"
-            className="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold hover:bg-indigo-50 transition-colors text-lg"
+            className="inline-flex items-center gap-2 bg-white text-indigo-800 px-8 py-4 rounded-xl font-bold hover:bg-indigo-50 transition-colors text-lg"
           >
             <ShoppingBag size={22} />
             Découvrir les produits
@@ -50,7 +50,7 @@ export default function HomePage() {
         <section className="max-w-7xl mx-auto px-4 py-16">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <Tag size={22} className="text-indigo-600" />
+              <Tag size={22} className="text-indigo-800" />
               Catégories
             </h2>
           </div>
@@ -77,14 +77,14 @@ export default function HomePage() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2 mb-2">
-                  <Package size={24} className="text-indigo-600" />
+                  <Package size={24} className="text-indigo-800" />
                   Mes commandes
                 </h2>
                 <p className="text-gray-600">Consulte l'historique et le statut de tes commandes</p>
               </div>
               <Link
                 to="/orders"
-                className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+                className="bg-indigo-800 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
               >
                 Voir mes commandes
               </Link>
@@ -97,12 +97,12 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-4 py-8 pb-16">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <Star size={22} className="text-indigo-600" />
+            <Star size={22} className="text-indigo-800" />
             Nouveaux produits
           </h2>
           <Link
             to="/products"
-            className="flex items-center gap-1 text-indigo-600 hover:text-indigo-700 font-medium text-sm"
+            className="flex items-center gap-1 text-indigo-800 hover:text-indigo-700 font-medium text-sm"
           >
             Voir tout <ArrowRight size={16} />
           </Link>
@@ -132,9 +132,9 @@ export default function HomePage() {
                   )}
                 </div>
                 <div className="p-4">
-                  <p className="text-xs text-indigo-600 font-medium">{product.category?.name}</p>
+                  <p className="text-xs text-indigo-800 font-medium">{product.category?.name}</p>
                   <h3 className="font-semibold text-gray-900 truncate mt-1">{product.title}</h3>
-                  <p className="text-lg font-bold text-indigo-600 mt-2">
+                  <p className="text-lg font-bold text-indigo-800 mt-2">
                     {Number(product.effective_price || product.price).toLocaleString()} FCFA
                   </p>
                 </div>

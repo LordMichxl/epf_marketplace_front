@@ -221,7 +221,7 @@ function CarteCommande({ order, isUpdating, onChangerStatut }) {
         <div className="flex items-center gap-2 mb-4 bg-slate-50 rounded-lg
                         px-3 py-2">
           <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center
-                          justify-center text-xs font-bold text-indigo-600">
+                          justify-center text-xs font-bold text-indigo-800">
             {/* Initiale du nom de l'acheteur */}
             {order.buyer.name.charAt(0).toUpperCase()}
           </div>
@@ -259,13 +259,11 @@ function CarteCommande({ order, isUpdating, onChangerStatut }) {
         ))}
       </div>
 
-      {/* ── Ligne 4 : total + bouton changement de statut ── */}
       <div className="flex items-center justify-between pt-3
                       border-t border-slate-100">
         <div>
           <p className="text-xs text-slate-400">Total vendeur</p>
           <p className="font-semibold text-slate-900">
-            {/* total_amount est une string "15000.00" → on convertit */}
             {Number(order.total_amount).toLocaleString('fr-FR')} F CFA
           </p>
         </div>

@@ -83,7 +83,7 @@ export default function OrdersPage() {
           <p className="text-gray-500 text-lg">Aucune commande pour l'instant</p>
           <Link
             to="/products"
-            className="mt-4 inline-block bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors"
+            className="mt-4 inline-block bg-indigo-800 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors"
           >
             Faire mes premiers achats
           </Link>
@@ -116,7 +116,7 @@ export default function OrdersPage() {
                   <span className={`text-xs font-medium px-3 py-1 rounded-full ${getStatusColor(order.status)}`}>
                     {getStatusLabel(order.status)}
                   </span>
-                  <span className="font-bold text-indigo-600">
+                  <span className="font-bold text-indigo-800">
                     {Number(order.total_amount).toLocaleString()} FCFA
                   </span>
                   {expandedOrder === order.id
@@ -154,7 +154,7 @@ export default function OrdersPage() {
                                   <div className="flex-1">
                                     <Link
                                       to={`/products/${item.product?.id}`}
-                                      className="text-sm font-medium text-gray-900 hover:text-indigo-600"
+                                      className="text-sm font-medium text-gray-900 hover:text-indigo-800"
                                     >
                                       {item.product?.title}
                                     </Link>
@@ -216,7 +216,7 @@ export default function OrdersPage() {
                             )}
                             <div className="flex justify-between font-bold text-sm border-t pt-2">
                               <span>Total :</span>
-                              <span className="text-indigo-600">{Number(displayOrder.total_amount).toLocaleString()} FCFA</span>
+                              <span className="text-indigo-800">{Number(displayOrder.total_amount).toLocaleString()} FCFA</span>
                             </div>
                           </div>
                         </div>

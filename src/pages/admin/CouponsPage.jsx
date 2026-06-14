@@ -58,7 +58,7 @@ export default function CouponPage(){
 
         <Link
           to="/admin/coupons/new"
-          className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm
+          className="bg-indigo-700 hover:bg-indigo-800 text-white text-sm
                      font-medium px-4 py-2.5 rounded-lg transition"
         >
           + Nouveau coupon
@@ -75,7 +75,7 @@ export default function CouponPage(){
           <p className="text-lg font-medium">Aucun coupon créé</p>
           <Link
             to="/admin/coupons/add"
-            className="text-indigo-500 text-sm mt-2 inline-block
+            className="text-indigo-800 text-sm mt-2 inline-block
                        hover:underline"
           >
             Créer un coupon

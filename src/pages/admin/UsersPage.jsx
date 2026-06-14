@@ -6,7 +6,7 @@ const ROLES =[
 {value: '',  label: 'Tous'},
 {value: 'buyer', label: 'Acheteurs'},
 {value: 'seller', label: 'Vendeurs'},
-{value: 'admins', label: 'Admin'}
+{value: 'admin', label: 'Admin'}
 ]
 
 const ROLE_STYLE =[
@@ -133,7 +133,7 @@ export default function UsersPage(){
                                  justify-center text-sm font-bold
                                  ${user.suspended_at
                                    ? 'bg-red-200 text-red-600'
-                                   : 'bg-indigo-100 text-indigo-600'}`}>
+                                   : 'bg-indigo-100 text-indigo-800'}`}>
                   {user.name.charAt(0).toUpperCase()}
                 </div>
 

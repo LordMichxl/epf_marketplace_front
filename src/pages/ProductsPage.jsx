@@ -145,7 +145,7 @@ export default function ProductsPage() {
                 </h2>
                 <button
                   onClick={() => setShowFilters(false)}
-                  className="p-2 text-gray-600 hover:text-indigo-600"
+                  className="p-2 text-gray-600 hover:text-indigo-800"
                 >
                   <X size={20} />
                 </button>
@@ -210,7 +210,7 @@ export default function ProductsPage() {
               </button>
               <button
                 onClick={() => setShowFilters(false)}
-                className="w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                className="w-full py-2 bg-indigo-800 text-white rounded-lg hover:bg-indigo-700 transition-colors"
               >
                 Appliquer
               </button>
@@ -232,7 +232,7 @@ export default function ProductsPage() {
               </div>
               <button
                 onClick={() => setShowFilters(true)}
-                className="sm:hidden px-4 py-3 border border-gray-200 rounded-xl text-gray-600 hover:text-indigo-600 flex items-center justify-center gap-2"
+                className="sm:hidden px-4 py-3 border border-gray-200 rounded-xl text-gray-600 hover:text-indigo-800 flex items-center justify-center gap-2"
               >
                 <SlidersHorizontal size={18} />
                 Filtres
@@ -309,11 +309,11 @@ function ProductCard({ product }) {
       </div>
 
       <div className="p-2 sm:p-4">
-        <p className="text-xs text-indigo-600 font-medium mb-1 truncate">{product.category?.name}</p>
+        <p className="text-xs text-indigo-800 font-medium mb-1 truncate">{product.category?.name}</p>
         <h3 className="font-semibold text-gray-900 truncate text-sm sm:text-base line-clamp-2">{product.title}</h3>
         <p className="text-xs text-gray-400 mt-1 truncate">{product.seller?.name}</p>
         <div className="flex items-center justify-between mt-2 sm:mt-3">
-          <span className="text-base sm:text-lg font-bold text-indigo-600">
+          <span className="text-base sm:text-lg font-bold text-indigo-800">
             {Number(price).toLocaleString()} FCFA
           </span>
           {product.rating > 0 && (

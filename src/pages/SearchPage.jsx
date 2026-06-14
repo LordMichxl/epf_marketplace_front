@@ -69,7 +69,7 @@ export default function SearchPage() {
         </select>
         <button
           type="submit"
-          className="bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors"
+          className="bg-indigo-800 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors"
         >
           Chercher
         </button>
@@ -111,7 +111,7 @@ export default function SearchPage() {
                 </div>
                 <div className="p-4">
                   <h3 className="font-semibold text-gray-900 truncate">{product.title}</h3>
-                  <p className="text-indigo-600 font-bold mt-1">
+                  <p className="text-indigo-800 font-bold mt-1">
                     {Number(product.effective_price || product.price).toLocaleString()} FCFA
                   </p>
                 </div>
@@ -130,7 +130,7 @@ export default function SearchPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {results.sellers.map((seller) => (
               <div key={seller.id} className="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-4">
-                <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold text-lg">
+                <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-800 font-bold text-lg">
                   {seller.name?.charAt(0).toUpperCase()}
                 </div>
                 <div>
@@ -154,7 +154,7 @@ export default function SearchPage() {
               <Link
                 key={cat.id}
                 to={`/products?category_id=${cat.id}`}
-                className="bg-white border border-gray-200 rounded-xl px-4 py-2 hover:border-indigo-400 hover:text-indigo-600 transition-colors text-sm font-medium"
+                className="bg-white border border-gray-200 rounded-xl px-4 py-2 hover:border-indigo-400 hover:text-indigo-800 transition-colors text-sm font-medium"
               >
                 🏷️ {cat.name}
               </Link>

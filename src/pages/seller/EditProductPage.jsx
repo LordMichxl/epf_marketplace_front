@@ -457,7 +457,7 @@ export default function EditProductPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 bg-indigo-500 hover:bg-indigo-600
+            className="flex-1 bg-indigo-700 hover:bg-indigo-800
                        disabled:opacity-60 text-white font-semibold
                        py-3 rounded-xl transition text-sm"
           >

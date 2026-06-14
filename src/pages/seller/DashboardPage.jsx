@@ -180,7 +180,7 @@ function CommandesRecentes({ orders }) {
           <tbody>
             {orders.map(order => (
               <tr key={order.order_number} className="border-b border-slate-100 hover:bg-slate-50">
-                <td className="px-6 py-4 text-sm font-medium text-indigo-600">
+                <td className="px-6 py-4 text-sm font-medium text-indigo-800">
                   {order.order_number}
                 </td>
                 <td className="px-6 py-4 text-sm text-slate-700">
