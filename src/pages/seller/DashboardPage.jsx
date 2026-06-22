@@ -44,7 +44,7 @@ export default function DashboardPage() {
   return(
     <div className="p-6 bg-slate-50 min-h-screen">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Dashboard Seller</h1>
+        <h1 className="text-3xl font-bold text-slate-900">Dashboard Vendeur</h1>
         
         <select 
           value={period} 

@@ -217,7 +217,7 @@ export default function CartPage() {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Ex: Jean Dupont"
+                placeholder="Ex: Mbene Sene"
                 autoComplete="name"
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
